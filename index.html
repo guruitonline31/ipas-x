@@ -1,1101 +1,1366 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Projek IPAS Kelas X — CP, ATP & KKTP (Erlangga)</title>
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --surface-alt: #f1f5f9;
-      --text: #0f172a;
-      --muted: #475569;
-      --primary: #0f766e;
-      --primary-hover: #115e59;
-      --primary-soft: #f0fdfa;
-      --accent: #1d4ed8;
-      --accent-soft: #eff6ff;
-      --warn: #b45309;
-      --warn-soft: #fffbeb;
-      --success: #15803d;
-      --success-soft: #f0fdf4;
-      --danger: #b91c1c;
-      --danger-soft: #fef2f2;
-      --border: #e2e8f0;
-      --radius: 14px;
-      --shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyek IPAS SMK/MAK Kelas X - E-Modul Interaktif</title>
+<style>
+  :root {
+    --primary: #e11d48;
+    --primary-dark: #be123c;
+    --secondary: #0284c7;
+    --accent: #f59e0b;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --radius: 14px;
+    --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+  }
+  /* Sidebar */
+  aside {
+    width: 300px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; bottom: 0; left: 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+  .brand {
+    padding: 22px 20px;
+    background: linear-gradient(135deg, #e11d48 0%, #0284c7 100%);
+    color: #fff;
+  }
+  .brand .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .brand h1 { font-size: 19px; font-weight: 800; line-height: 1.25; }
+  .brand p { font-size: 12px; opacity: 0.9; margin-top: 4px; }
 
-    * { box-sizing: border-box; }
+  .progress-box {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: #f1f5f9;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: #cbd5e1;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%;
+    transition: width 0.4s ease;
+  }
 
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding-bottom: 76px;
-    }
+  nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 12px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .nav-item:hover { background: #f1f5f9; }
+  .nav-item.active {
+    background: #fff1f2;
+    color: var(--primary);
+    font-weight: 700;
+    box-shadow: inset 3px 0 0 var(--primary);
+  }
+  .nav-num {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #e2e8f0;
+    color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .nav-item.active .nav-num {
+    background: var(--primary);
+    color: #fff;
+  }
+  .nav-item.done .nav-num {
+    background: var(--success);
+    color: #fff;
+  }
+  .nav-title { font-size: 13px; line-height: 1.35; }
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+  /* Main Content */
+  main {
+    flex: 1;
+    margin-left: 300px;
+    padding: 28px 36px 80px;
+    max-width: 1100px;
+  }
+  .mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 90;
+  }
+  .menu-btn {
+    background: var(--primary); color: #fff; border: none;
+    padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer;
+  }
 
-    .brand { display: flex; align-items: center; gap: 10px; }
+  .hero-banner {
+    background: linear-gradient(120deg, #0f172a 0%, #1e3a8a 60%, #be123c 100%);
+    color: #fff;
+    padding: 28px 32px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .hero-banner .bab-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #0f172a;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 10px;
+  }
+  .hero-banner h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+  .hero-banner p { font-size: 14px; opacity: 0.9; }
 
-    .brand-badge {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: #fff;
-      font-weight: 700;
-      display: grid;
-      place-items: center;
-      font-size: 0.88rem;
-      flex-shrink: 0;
-    }
+  /* Mode Tabs */
+  .mode-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .mode-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .mode-btn.active {
+    border-color: var(--secondary);
+    background: #e0f2fe;
+    color: var(--secondary);
+  }
 
-    .brand-title { font-weight: 700; font-size: 1rem; margin: 0; }
-    .brand-sub { font-size: 0.78rem; color: var(--muted); margin: 0; }
+  /* Cards & Sections */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card h3 {
+    font-size: 19px;
+    color: var(--primary-dark);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h4 {
+    font-size: 16px;
+    color: var(--secondary);
+    margin: 16px 0 8px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .mini-box {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--secondary);
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+  .mini-box.pink { border-left-color: var(--primary); }
+  .mini-box.amber { border-left-color: var(--accent); }
+  .mini-box.green { border-left-color: var(--success); }
+  .mini-box strong { display: block; margin-bottom: 4px; color: #0f172a; }
 
-    .controls-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  ul.styled-list {
+    padding-left: 20px;
+    margin: 8px 0;
+  }
+  ul.styled-list li { margin-bottom: 6px; }
 
-    .role-switch {
-      display: inline-flex;
-      background: var(--surface-alt);
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  table.data-table th, table.data-table td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+  }
+  table.data-table th {
+    background: #0f172a;
+    color: #fff;
+    font-weight: 600;
+  }
+  table.data-table tr:nth-child(even) { background: #f8fafc; }
 
-    .role-btn {
-      border: none;
-      background: transparent;
-      padding: 6px 12px;
-      border-radius: 7px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--muted);
-      cursor: pointer;
-    }
+  .formula-box {
+    background: #eff6ff;
+    border: 1.5px dashed #3b82f6;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    color: #1e3a8a;
+  }
 
-    .role-btn.active { background: var(--primary); color: #fff; }
+  /* Interactive Simulator Box */
+  .sim-panel {
+    background: linear-gradient(135deg, #f0f9ff 0%, #fff1f2 100%);
+    border: 2px solid #bae6fd;
+    border-radius: var(--radius);
+    padding: 22px;
+    margin: 18px 0;
+  }
+  .sim-panel h4 {
+    margin-top: 0;
+    color: #0369a1;
+    font-size: 17px;
+  }
+  .sim-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 14px 0;
+    align-items: flex-end;
+  }
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .control-group label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+  .control-group input, .control-group select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #94a3b8;
+    font-size: 14px;
+    background: #fff;
+  }
+  .btn-action {
+    background: var(--secondary);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-action:hover { opacity: 0.9; }
+  .sim-result {
+    background: #fff;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-weight: 600;
+    margin-top: 10px;
+  }
 
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+  /* Flashcards */
+  .flashcard-container {
+    perspective: 1000px;
+    max-width: 560px;
+    margin: 20px auto;
+  }
+  .flashcard {
+    width: 100%;
+    min-height: 240px;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border: 2px solid var(--secondary);
+    border-radius: 18px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s;
+  }
+  .flashcard:hover { transform: translateY(-3px); }
+  .fc-tag {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .fc-content { font-size: 19px; font-weight: 700; color: #0f172a; }
+  .fc-hint { font-size: 12px; color: var(--text-muted); margin-top: 16px; }
+  .fc-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+  }
 
-    .btn:hover { background: var(--surface-alt); }
-    .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-hover); }
-    .btn-accent { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .btn-sm { padding: 5px 10px; font-size: 0.8rem; border-radius: 8px; }
+  /* Quiz */
+  .quiz-q {
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .quiz-q p { font-weight: 700; margin-bottom: 10px; font-size: 15px; }
+  .opt-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 11px 15px;
+    margin-bottom: 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--secondary); background: #f0f9ff; }
+  .opt-btn.correct { border-color: var(--success); background: #dcfce7; color: #065f46; font-weight: 700; }
+  .opt-btn.wrong { border-color: var(--danger); background: #fee2e2; color: #991b1b; }
+  .feedback {
+    font-size: 13px;
+    margin-top: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: none;
+  }
 
-    .layout {
-      max-width: 1260px;
-      margin: 0 auto;
-      padding: 18px;
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 20px;
-      align-items: start;
-    }
+  .complete-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 16px 22px;
+    border-radius: var(--radius);
+    margin-top: 28px;
+  }
+  .btn-complete {
+    background: var(--success);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+  }
 
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; padding: 12px; }
-      .sidebar { display: none; }
-      .sidebar.open {
-        display: block;
-        position: fixed;
-        inset: 64px 0 0 0;
-        z-index: 50;
-        background: rgba(15, 23, 42, 0.45);
-        padding: 14px;
-      }
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      margin-bottom: 16px;
-    }
-
-    .sidebar-inner {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .nav-group-title {
-      font-size: 0.74rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-      margin: 12px 0 6px;
-    }
-
-    .nav-btn {
-      width: 100%;
-      text-align: left;
-      border: none;
-      background: transparent;
-      padding: 8px 10px;
-      border-radius: 9px;
-      font-size: 0.86rem;
-      color: var(--text);
-      cursor: pointer;
-      margin-bottom: 3px;
-    }
-
-    .nav-btn:hover { background: var(--surface-alt); }
-    .nav-btn.active { background: var(--primary-soft); color: var(--primary); font-weight: 700; }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    label { display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px; }
-
-    input[type="text"], select, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-family: inherit;
-      font-size: 0.92rem;
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    textarea { min-height: 95px; resize: vertical; }
-
-    .meta-chips {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 8px 0 12px;
-    }
-
-    .chip {
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 99px;
-      background: var(--primary-soft);
-      color: var(--primary);
-    }
-
-    .chip.alt {
-      background: var(--accent-soft);
-      color: var(--accent);
-    }
-
-    .tp-list {
-      padding-left: 18px;
-      margin: 8px 0 0;
-      font-size: 0.9rem;
-    }
-
-    .tp-list li { margin-bottom: 5px; }
-
-    .teacher-box {
-      display: none;
-      background: var(--warn-soft);
-      border: 1px solid #fcd34d;
-      border-left: 4px solid var(--warn);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-      font-size: 0.88rem;
-    }
-
-    body.teacher-mode .teacher-box { display: block; }
-
-    .teacher-badge {
-      display: inline-block;
-      background: #fef3c7;
-      color: var(--warn);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 99px;
-      margin-bottom: 4px;
-    }
-
-    .pillars {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 10px;
-      margin: 14px 0;
-    }
-
-    .pillar {
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--surface-alt);
-      font-size: 0.86rem;
-    }
-
-    .pillar strong { display: block; color: var(--primary); margin-bottom: 3px; }
-
-    .info-box {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 15px;
-      background: var(--surface-alt);
-      margin-top: 10px;
-    }
-
-    .quiz-item {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .option-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 400;
-      margin-bottom: 4px;
-    }
-
-    .option-label:hover { background: var(--surface-alt); }
-
-    .feedback {
-      margin-top: 8px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 0.86rem;
-      display: none;
-    }
-
-    .feedback.show { display: block; }
-    .feedback.ok { background: var(--success-soft); color: var(--success); border: 1px solid #86efac; }
-    .feedback.bad { background: var(--danger-soft); color: var(--danger); border: 1px solid #fca5a5; }
-
-    .status-banner {
-      padding: 12px 14px;
-      border-radius: 10px;
-      margin-top: 12px;
-      font-size: 0.9rem;
-      display: none;
-    }
-
-    .status-banner.show { display: block; }
-    .status-banner.ok { background: var(--success-soft); color: var(--success); border: 1px solid #86efac; }
-    .status-banner.warn { background: var(--warn-soft); color: var(--warn); border: 1px solid #fcd34d; }
-
-    .bottom-nav { display: none; }
-
-    @media (max-width: 900px) {
-      .bottom-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 40;
-        background: var(--surface);
-        border-top: 1px solid var(--border);
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        padding: 6px 4px;
-      }
-      .bottom-nav button {
-        border: none;
-        background: transparent;
-        font-size: 0.74rem;
-        font-weight: 600;
-        color: var(--muted);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-        padding: 4px;
-        cursor: pointer;
-      }
-      .bottom-nav button.active { color: var(--primary); }
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      z-index: 70;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.open { display: flex; }
-
-    .modal-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      max-width: 720px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 20px;
-    }
-
-    table.kktp-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-      margin-top: 10px;
-    }
-
-    table.kktp-table th, table.kktp-table td {
-      border: 1px solid var(--border);
-      padding: 8px 10px;
-      text-align: left;
-    }
-
-    table.kktp-table th { background: var(--surface-alt); }
-
-    .hidden-tab { display: none; }
-
-    @media print {
-      .topbar, .sidebar, .bottom-nav, .no-print { display: none !important; }
-      body { background: #fff; padding: 0; }
-      .layout { display: block; }
-    }
-  </style>
+  @media (max-width: 860px) {
+    aside { transform: translateX(-100%); }
+    aside.open { transform: translateX(0); }
+    main { margin-left: 0; padding: 18px 16px 60px; }
+    .mobile-header { display: flex; }
+  }
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-badge">IPAS</div>
+
+<aside id="sidebar">
+  <div class="brand">
+    <span class="badge">KURIKULUM MERDEKA • SMK/MAK X</span>
+    <h1>Proyek IPAS Interaktif</h1>
+    <p>Rumpun Kesehatan, Agribisnis & Kemaritiman</p>
+  </div>
+  <div class="progress-box">
+    <div class="progress-label">
+      <span>Progres Belajar Mandiri</span>
+      <span id="prog-text">0/7 Bab</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+  <nav id="nav-list"></nav>
+</aside>
+
+<div style="flex:1; display:flex; flex-direction:column;">
+  <div class="mobile-header">
+    <strong>Proyek IPAS SMK Kelas X</strong>
+    <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Daftar Bab</button>
+  </div>
+
+  <main>
+    <div class="hero-banner">
+      <span class="bab-tag" id="hero-bab">BAB 1</span>
+      <h2 id="hero-title">Makhluk Hidup dan Lingkungannya</h2>
+      <p id="hero-desc">Pelajari materi lengkap secara terstruktur, uji pemahaman dengan kartu hafalan (flashcard), simulasi interaktif, dan latihan soal evaluasi mandiri.</p>
+    </div>
+
+    <div class="mode-tabs">
+      <button class="mode-btn active" onclick="setMode('materi', this)">📖 Materi Lengkap & Simulasi</button>
+      <button class="mode-btn" onclick="setMode('flashcard', this)">🗂️ Kartu Konsep (Flashcard)</button>
+      <button class="mode-btn" onclick="setMode('quiz', this)">✍️ Kuis Pemahaman Mandiri</button>
+    </div>
+
+    <div id="content-area"></div>
+
+    <div class="complete-bar">
       <div>
-        <p class="brand-title">Projek IPAS Kelas X — Deep Learning</p>
-        <p class="brand-sub">Fase E • CP, ATP & KKTP Selaras Buku Erlangga</p>
+        <strong style="display:block; font-size:14px;">Selesai mempelajari bab ini?</strong>
+        <span style="font-size:12px; color:var(--text-muted);">Tandai selesai untuk menyimpan progres belajarmu.</span>
       </div>
+      <button class="btn-complete" id="btn-mark-done" onclick="toggleComplete()">✓ Tandai Bab Selesai</button>
     </div>
+  </main>
+</div>
 
-    <div class="controls-top no-print">
-      <button class="btn btn-sm" onclick="toggleMobileMenu()">☰ Daftar Materi</button>
-      <div class="role-switch">
-        <button class="role-btn active" id="roleStudentBtn" onclick="setRole('student')">Mode Siswa</button>
-        <button class="role-btn" id="roleTeacherBtn" onclick="setRole('teacher')">Mode Guru</button>
-      </div>
-      <button class="btn btn-sm" id="btnCpKktp" style="display:none;" onclick="openModal('cpKktpModal')">📋 CP & KKTP</button>
-    </div>
-  </header>
-
-  <div class="layout">
-    <aside class="sidebar" id="sidebar" onclick="handleSidebarBackdrop(event)">
-      <div class="sidebar-inner" onclick="event.stopPropagation()">
-        <strong>Semester 1 (Materi 1–4)</strong>
-        <div id="navSmt1" style="margin-top:6px;"></div>
-
-        <div class="nav-group-title">Semester 2 (Materi 5–7)</div>
-        <div id="navSmt2"></div>
-
-        <div class="nav-group-title">Langkah Aktivitas</div>
-        <button class="nav-btn active" data-step="step-materi" onclick="switchStep('step-materi')">1. Materi & TP (ATP)</button>
-        <button class="nav-btn" data-step="step-kuis" onclick="switchStep('step-kuis')">2. Kuis & Cek KKTP</button>
-        <button class="nav-btn" data-step="step-lkpd" onclick="switchStep('step-lkpd')">3. LKPD & Kirim Sheet</button>
-      </div>
-    </aside>
-
-    <main>
-      <!-- IDENTITAS & PILIHAN MATERI -->
-      <section class="card no-print">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-          <div>
-            <strong>🪪 Identitas Siswa & Pemilihan Materi ATP</strong>
-            <div style="font-size:0.82rem; color:var(--muted);">Pilih materi sesuai jadwal pembelajaran, isi identitas, lalu kerjakan kuis dan LKPD.</div>
-          </div>
-          <span id="identityBadge" style="font-size:0.8rem; padding:4px 10px; border-radius:99px; background:var(--warn-soft); color:var(--warn); font-weight:600;">Belum lengkap</span>
-        </div>
-
+<script>
+const MODULES = [
+  {
+    id: 1,
+    bab: "BAB 1",
+    title: "Makhluk Hidup dan Lingkungannya",
+    desc: "Ciri-ciri kehidupan, komponen ekosistem biotik & abiotik, interaksi antarkomponen, serta pencemaran dan konservasi lingkungan.",
+    materiHTML: `
+      <div class="card">
+        <h3>A. Ciri-Ciri Makhluk Hidup</h3>
+        <p>Berbeda dengan benda mati (seperti batu), makhluk hidup mampu mempertahankan dirinya dan melestarikan spesiesnya melalui 8 ciri utama:</p>
         <div class="grid-2">
-          <div>
-            <label for="studentName">Nama Lengkap</label>
-            <input type="text" id="studentName" placeholder="Contoh: Nadia Putri" oninput="saveIdentity()" />
+          <div class="mini-box">
+            <strong>1. Bernapas (Respirasi)</strong>
+            Menghirup O₂ dan mengeluarkan CO₂.
+            <ul class="styled-list">
+              <li><b>Manusia:</b> Hidung → Faring → Laring → Trakea → Bronkus → Bronkiolus → Alveolus.</li>
+              <li><b>Hewan:</b> Paru-paru, kulit, insang, trakea, serta kantong udara (<i>air sacs</i>) pada Aves saat terbang.</li>
+              <li><b>Tumbuhan:</b> Stomata (daun), lentisel (batang), dan rambut akar.</li>
+            </ul>
           </div>
-          <div>
-            <label for="studentClass">Kelas / Jurusan</label>
-            <input type="text" id="studentClass" placeholder="Contoh: X ATPH 1 / X Kuliner 1" oninput="saveIdentity()" />
+          <div class="mini-box pink">
+            <strong>2. Memerlukan Makanan/Nutrisi</strong>
+            Untuk energi, regenerasi sel, pemeliharaan jaringan, dan kekebalan tubuh.
+            <ul class="styled-list">
+              <li><b>Makronutrien</b> (jumlah banyak): Karbohidrat, Lemak, Protein.</li>
+              <li><b>Mikronutrien</b> (jumlah sedikit): Vitamin dan Mineral.</li>
+            </ul>
           </div>
-          <div>
-            <label for="topicSelect">Pilih Materi (ATP Kelas X)</label>
-            <select id="topicSelect" onchange="selectTopic(this.value)"></select>
+          <div class="mini-box amber">
+            <strong>3. Bergerak</strong>
+            Semua makhluk hidup bergerak meski tidak berpindah tempat.
+            <ul class="styled-list">
+              <li><b>Gerak aktif:</b> Akibat kerja otot (manusia & hewan berjalan/makan).</li>
+              <li><b>Gerak pasif:</b> Respons terhadap rangsangan pada tumbuhan.</li>
+            </ul>
+          </div>
+          <div class="mini-box green">
+            <strong>4. Peka terhadap Rangsangan (Iritabilitas)</strong>
+            Menanggapi rangsang sentuhan, cahaya, bau, dan rasa. Contoh: daun putri malu menguncup saat disentuh.
+          </div>
+          <div class="mini-box">
+            <strong>5. Tumbuh dan Berkembang</strong>
+            <b>Pertumbuhan:</b> Perubahan ukuran (panjang, massa, volume) yang bersifat kuantitatif.<br>
+            <b>Perkembangan:</b> Proses menuju kedewasaan (kualitatif).
+          </div>
+          <div class="mini-box pink">
+            <strong>6. Berkembang Biak (Reproduksi)</strong>
+            <ul class="styled-list">
+              <li><b>Hewan:</b> Vivipar (beranak), Ovipar (bertelur), Ovovivipar (bertelur-beranak).</li>
+              <li><b>Tumbuhan:</b> Generatif (kawin/biji) dan Vegetatif (tak kawin/spora, tunas, umbi).</li>
+            </ul>
+          </div>
+          <div class="mini-box amber">
+            <strong>7. Mengeluarkan Zat Sisa (Ekskresi)</strong>
+            Mengeluarkan zat sisa hasil metabolisme tubuh (seperti keringat, urine, CO₂) agar tidak meracuni tubuh.
+          </div>
+          <div class="mini-box green">
+            <strong>8. Beradaptasi</strong>
+            Penyesuaian diri terhadap lingkungan melalui <b>Adaptasi Morfologi</b> (bentuk tubuh), <b>Fisiologi</b> (fungsi organ), dan <b>Tingkah Laku</b>.
           </div>
         </div>
-      </section>
-
-      <!-- STEP 1: MATERI & TP -->
-      <section class="card step-section" id="step-materi">
-        <div class="teacher-box">
-          <span class="teacher-badge">CATATAN GURU — DEEP LEARNING</span>
-          <div>Hubungkan Tujuan Pembelajaran (TP) dengan konteks praktik kejuruan/lingkungan sekitar dan kembangkan Dimensi Profil Lulusan yang tercantum pada ATP.</div>
-        </div>
-
-        <h2 id="topicTitle"></h2>
-        <div class="meta-chips" id="topicMeta"></div>
-
-        <div class="pillars">
-          <div class="pillar">
-            <strong>Mindful</strong>
-            Mengamati fakta, data, dan fenomena secara teliti serta menyadari dampak tindakan terhadap diri dan lingkungan.
-          </div>
-          <div class="pillar">
-            <strong>Meaningful</strong>
-            Mengaitkan konsep IPAS dengan kebutuhan nyata, keselamatan/keberlanjutan, dan keterampilan kejuruan.
-          </div>
-          <div class="pillar">
-            <strong>Joyful</strong>
-            Belajar aktif melalui eksplorasi kasus, kuis interaktif, dan perancangan aksi kreatif.
-          </div>
-        </div>
-
-        <div class="info-box">
-          <strong>Tujuan Pembelajaran (ATP):</strong>
-          <ol class="tp-list" id="tpList"></ol>
-        </div>
-
-        <div class="info-box">
-          <strong>Ringkasan Konsep & Fenomena Kontekstual:</strong>
-          <p id="conceptSummary" style="margin:6px 0 0;"></p>
-        </div>
-
-        <div style="margin-top:16px; display:flex; justify-content:flex-end;">
-          <button class="btn btn-primary" onclick="switchStep('step-kuis')">Lanjut ke Kuis & Cek KKTP →</button>
-        </div>
-      </section>
-
-      <!-- STEP 2: KUIS & KKTP -->
-      <section class="card step-section hidden-tab" id="step-kuis">
-        <div class="teacher-box">
-          <span class="teacher-badge">EVALUASI & INTERVAL KKTP</span>
-          <div>Skor otomatis dipetakan ke interval ketercapaian: 0–40 & 41–65 (Remedial), 66–85 (Tuntas), 86–100 (Pengayaan).</div>
-        </div>
-
-        <h2>Kuis Formatif & Status Ketercapaian (KKTP)</h2>
-        <div id="quizBox"></div>
-
-        <div style="margin-top:12px;">
-          <button class="btn btn-primary" onclick="evaluateQuiz()">Hitung Skor & Cek KKTP</button>
-        </div>
-        <div class="status-banner" id="quizResultBanner"></div>
-
-        <div style="margin-top:16px; display:flex; justify-content:space-between;">
-          <button class="btn" onclick="switchStep('step-materi')">← Kembali ke Materi</button>
-          <button class="btn btn-primary" onclick="switchStep('step-lkpd')">Lanjut ke LKPD & Kirim Sheet →</button>
-        </div>
-      </section>
-
-      <!-- STEP 3: LKPD & KIRIM SHEET -->
-      <section class="card step-section hidden-tab" id="step-lkpd">
-        <div class="teacher-box">
-          <span class="teacher-badge">ASESSMEN LKPD — GOOGLE SHEETS</span>
-          <div>Hasil LKPD, refleksi pembelajaran mendalam, dan skor kuis beserta status KKTP dikirim ke sheet <code>Rekap_IPAS_SMK</code>.</div>
-        </div>
-
-        <h2>LKPD Pembelajaran Mendalam</h2>
-
-        <div style="margin-bottom:12px;">
-          <label for="lkpdTitle">Judul Pengamatan / Proyek Singkat</label>
-          <input type="text" id="lkpdTitle" placeholder="Tuliskan judul kasus/objek yang Anda kaji..." oninput="saveLkpd()" />
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <label for="lkpdAnalysis">1. Analisis Fenomena & Bukti Ilmiah</label>
-          <textarea id="lkpdAnalysis" placeholder="Uraikan konsep/fakta ilmiah dan keterkaitannya dengan lingkungan/sosial..." oninput="saveLkpd()"></textarea>
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <label for="lkpdAction">2. Rencana Aksi / Tindak Lanjut</label>
-          <textarea id="lkpdAction" placeholder="Tuliskan langkah aksi nyata, prosedur keselamatan/efisiensi, atau solusi yang dirancang..." oninput="saveLkpd()"></textarea>
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <label for="refMindful">3. Refleksi Mindful (Kesadaran & Fokus Belajar)</label>
-          <textarea id="refMindful" style="min-height:75px;" placeholder="Bagaimana proses pengamatan dan pemahaman Anda pada materi ini?" oninput="saveLkpd()"></textarea>
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <label for="refMeaningful">4. Refleksi Meaningful & Joyful (Makna & Pengalaman Belajar)</label>
-          <textarea id="refMeaningful" style="min-height:75px;" placeholder="Apa manfaat materi ini untuk kehidupan sehari-hari dan bidang keahlian Anda?" oninput="saveLkpd()"></textarea>
-        </div>
-
-        <div class="no-print" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
-          <button class="btn btn-accent" onclick="sendToGoogleSheet()">☁️ Kirim LKPD ke Google Sheets</button>
-          <button class="btn" onclick="copyLkpdText()">📋 Salin Jawaban</button>
-          <button class="btn" onclick="window.print()">🖨️ Cetak / PDF</button>
-        </div>
-        <div class="status-banner" id="sheetStatus"></div>
-
-        <div style="margin-top:16px;">
-          <button class="btn" onclick="switchStep('step-kuis')">← Kembali ke Kuis</button>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <nav class="bottom-nav no-print">
-    <button class="active" data-bstep="step-materi" onclick="switchStep('step-materi')">📚<span>Materi</span></button>
-    <button data-bstep="step-kuis" onclick="switchStep('step-kuis')">📝<span>Kuis</span></button>
-    <button data-bstep="step-lkpd" onclick="switchStep('step-lkpd')">☁️<span>LKPD</span></button>
-    <button onclick="openModal('cpKktpModal')">📋<span>KKTP</span></button>
-  </nav>
-
-  <div class="modal-backdrop" id="cpKktpModal" onclick="closeModal('cpKktpModal')">
-    <div class="modal-card" onclick="event.stopPropagation()">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">📋 Ringkasan CP Fase E & Interval KKTP</h3>
-        <button class="btn btn-sm" onclick="closeModal('cpKktpModal')">✕</button>
       </div>
-      <p style="font-size:0.88rem; margin-top:10px;"><strong>Elemen CP:</strong> Menjelaskan Fenomena secara Ilmiah; Mendesain dan Mengevaluasi Penyelidikan Ilmiah; Menerjemahkan Data dan Bukti-Bukti secara Ilmiah.</p>
-      <table class="kktp-table">
-        <thead>
-          <tr><th>Interval Nilai</th><th>Keterangan</th><th>Tindak Lanjut</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>0 – 40</td><td>Belum mencapai ketuntasan</td><td>Remedial di seluruh bagian</td></tr>
-          <tr><td>41 – 65</td><td>Belum mencapai ketuntasan</td><td>Remedial di bagian yang diperlukan</td></tr>
-          <tr><td>66 – 85</td><td>Sudah mencapai ketuntasan</td><td>Tidak perlu remedial</td></tr>
-          <tr><td>86 – 100</td><td>Sudah mencapai ketuntasan</td><td>Pengayaan atau tantangan lebih</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <script>
-    // =========================================================================
-    // TEMPEL URL WEB APP (/exec) GOOGLE APPS SCRIPT ANDA DI BAWAH INI
-    // =========================================================================
-    const GOOGLE_SCRIPT_URL = "TEMPEL_URL_APPS_SCRIPT_EXEC_ANDA_DISINI";
-    const STORAGE_KEY = "projek_ipas_x_erlangga_7mat_v1";
-
-    const ATP_DATA = [
-      {
-        id: "m1",
-        no: 1,
-        smt: 1,
-        jp: "8 JP",
-        title: "1. Makhluk Hidup dan Lingkungannya",
-        dims: "Gotong Royong; Bernalar Kritis; Kreatif; Mandiri; Beriman & Bertakwa",
-        tps: [
-          "10.1 Mengidentifikasi ciri-ciri makhluk hidup, sistem pernapasan, nutrisi, gerak, reproduksi, dan adaptasi.",
-          "10.2 Mendefinisikan lingkungan hidup, komponen ekosistem, serta tingkat organisasi kehidupan.",
-          "10.3 Mengidentifikasi dan mengklasifikasikan interaksi antar komponen ekosistem.",
-          "10.4 Mengklasifikasikan bentuk pencemaran lingkungan (air, udara, tanah) dan merancang solusi penanganannya."
-        ],
-        summary: "Mempelajari ciri dan adaptasi makhluk hidup, keseimbangan ekosistem (biotik-abiotik), serta penanggulangan pencemaran air, udara, dan tanah di lingkungan sekitar.",
-        quiz: [
-          {
-            q: "Interaksi antara faktor biotik dan abiotik dalam suatu lingkungan disebut...",
-            opts: ["Ekosistem", "Individu saja", "Populasi tunggal"],
-            ans: 0,
-            exp: "Ekosistem merupakan kesatuan interaksi antara makhluk hidup (biotik) dan lingkungan fisik/kimia (abiotik)."
-          },
-          {
-            q: "Langkah awal yang tepat saat merancang solusi pencemaran tanah akibat limbah adalah...",
-            opts: ["Mengidentifikasi jenis pencemar dan sumbernya", "Membakar semua limbah tanpa pemilahan", "Mengabaikan dampak jangka panjang"],
-            ans: 0,
-            exp: "Identifikasi jenis dan sumber pencemar diperlukan agar penanganan tepat sasaran dan aman."
-          }
-        ]
-      },
-      {
-        id: "m2",
-        no: 2,
-        smt: 1,
-        jp: "9 JP",
-        title: "2. Zat dan Perubahannya",
-        dims: "Gotong Royong; Bernalar Kritis; Kreatif",
-        tps: [
-          "10.5 Mengklasifikasikan zat berdasarkan wujud dan komposisi materi serta penerapan metode pemisahan campuran.",
-          "10.6 Mengidentifikasi sifat fisika dan kimia materi serta melakukan pengukuran dengan alat ukur.",
-          "10.7 Membedakan dan mengklasifikasikan perubahan fisika, kimia, dan biologi dalam kehidupan.",
-          "10.8 Mengklasifikasikan dan mempresentasikan prosedur pengelolaan Bahan Berbahaya dan Beracun (B3)."
-        ],
-        summary: "Membedakan unsur, senyawa, dan campuran, teknik pemisahan campuran, sifat/perubahan zat (fisika, kimia, biologi), serta prosedur aman pengelolaan limbah B3.",
-        quiz: [
-          {
-            q: "Perubahan zat yang menghasilkan zat baru dengan sifat berbeda disebut...",
-            opts: ["Perubahan kimia", "Perubahan wujud sementara", "Pemuaian panjang"],
-            ans: 0,
-            exp: "Perubahan kimia menghasilkan zat baru yang berbeda sifatnya dari zat semula."
-          },
-          {
-            q: "Pengelolaan limbah B3 harus dilakukan dengan prosedur yang tepat karena...",
-            opts: ["Dapat membahayakan kesehatan makhluk hidup dan lingkungan", "Selalu bernilai ekonomis tinggi tanpa risiko", "Tidak memerlukan pelabelan"],
-            ans: 0,
-            exp: "Limbah B3 berpotensi merusak lingkungan dan kesehatan sehingga memerlukan penanganan dan pelabelan sesuai standar."
-          }
-        ]
-      },
-      {
-        id: "m3",
-        no: 3,
-        smt: 1,
-        jp: "9 JP",
-        title: "3. Energi dan Perubahannya",
-        dims: "Gotong Royong; Bernalar Kritis; Kreatif",
-        tps: [
-          "10.9 Menelaah konsep energi dan usaha serta mengaitkan hubungan di antara keduanya.",
-          "10.10 Menjelaskan pengolahan minyak bumi, batu bara, serta menganalisis sumber energi nuklir.",
-          "10.11 Menjelaskan pemanfaatan energi terbarukan (sel surya, air, angin, bioenergi).",
-          "10.12 Menelaah perubahan energi mekanik, kimia, listrik, dan kalor."
-        ],
-        summary: "Mengkaji hubungan usaha dan energi, sumber energi tak terbarukan vs terbarukan (surya, air, angin, bioenergi), serta konversi berbagai bentuk energi.",
-        quiz: [
-          {
-            q: "Contoh pemanfaatan energi terbarukan dalam kehidupan sehari-hari adalah...",
-            opts: ["Panel surya (sel surya) dan bioenergi", "Pembakaran batu bara berlebih", "Pemborosan listrik tanpa beban"],
-            ans: 0,
-            exp: "Energi surya, angin, air, dan bioenergi termasuk sumber energi terbarukan yang berkelanjutan."
-          },
-          {
-            q: "Konversi energi pada kipas angin listrik yang bekerja adalah...",
-            opts: ["Energi listrik menjadi energi gerak (mekanik) dan sebagian kalor", "Energi nuklir menjadi energi cahaya saja", "Energi bunyi menjadi batu bara"],
-            ans: 0,
-            exp: "Motor listrik mengubah energi listrik menjadi energi gerak mekanik."
-          }
-        ]
-      },
-      {
-        id: "m4",
-        no: 4,
-        smt: 1,
-        jp: "12 JP",
-        title: "4. Bumi dan Antariksa",
-        dims: "Beriman & Bertakwa; Gotong Royong; Bernalar Kritis",
-        tps: [
-          "10.13 Menjelaskan Matahari sebagai pusat tata surya, mengklasifikasikan planet, asteroid, meteor, dan komet.",
-          "10.14 Menjelaskan sistem galaksi Bima Sakti, gravitasi bumi, dan hukum-hukumnya.",
-          "10.15 Mengidentifikasi struktur bumi (litosfer, hidrosfer, atmosfer), medan magnet bumi, serta penyebab perubahan iklim.",
-          "10.16 Membandingkan gerak rotasi/revolusi Bumi & Bulan, sistem penanggalan, gerhana, serta merancang prosedur mitigasi bencana."
-        ],
-        summary: "Memahami sistem tata surya dan gravitasi, lapisan Bumi serta perubahan iklim, rotasi/revolusi dan gerhana, hingga mitigasi bencana (prabencana, saat, dan pascabencana).",
-        quiz: [
-          {
-            q: "Mitigasi bencana yang efektif mencakup tahapan...",
-            opts: ["Prabencana, saat kejadian bencana, dan pascabencana", "Hanya setelah bencana terjadi", "Mengabaikan tanda-tanda alam"],
-            ans: 0,
-            exp: "Mitigasi dan manajemen bencana dilakukan secara menyeluruh pada tahap prabencana, saat bencana, dan pascabencana."
-          },
-          {
-            q: "Lapisan Bumi yang meliputi perairan (laut, sungai, danau) disebut...",
-            opts: ["Hidrosfer", "Litosfer", "Eksosfer"],
-            ans: 0,
-            exp: "Hidrosfer merupakan lapisan air di permukaan maupun di bawah permukaan Bumi."
-          }
-        ]
-      },
-      {
-        id: "m5",
-        no: 5,
-        smt: 2,
-        jp: "12 JP",
-        title: "5. Keruangan dan Konektivitas Antarruang & Waktu",
-        dims: "Berkebinekaan Global; Gotong Royong; Bernalar Kritis",
-        tps: [
-          "10.17 Menjelaskan konsep, bentuk, dan pengaruh interaksi keruangan dan waktu.",
-          "10.18 Mendeskripsikan kondisi geografis Indonesia (letak, luas, batas, bentang alam, dan karakteristik wilayah).",
-          "10.19 Menjelaskan kondisi sosial-budaya, ekonomi, dan politik masyarakat Indonesia.",
-          "10.20 Menjelaskan bentuk kerja sama antarnegara (bilateral, regional, dan multilateral)."
-        ],
-        summary: "Menganalisis interaksi antarruang dan waktu, karakteristik geografis dan sosial-budaya Indonesia, serta bentuk kerja sama bilateral, regional, dan multilateral.",
-        quiz: [
-          {
-            q: "Interaksi antarruang terjadi karena adanya...",
-            opts: ["Perbedaan karakteristik wilayah serta saling melengkapi kebutuhan", "Kesamaan mutlak tanpa pergerakan barang/orang/informasi", "Tidak adanya pengaruh waktu"],
-            ans: 0,
-            exp: "Perbedaan potensi dan kebutuhan antarwilayah mendorong aliran barang, jasa, informasi, dan mobilitas."
-          },
-          {
-            q: "Kerja sama yang melibatkan dua negara secara langsung disebut kerja sama...",
-            opts: ["Bilateral", "Multilateral", "Internal"],
-            ans: 0,
-            exp: "Kerja sama bilateral adalah kerja sama antara dua negara."
-          }
-        ]
-      },
-      {
-        id: "m6",
-        no: 6,
-        smt: 2,
-        jp: "8 JP",
-        title: "6. Interaksi Sosial dan Dinamika Sosial",
-        dims: "Berkebinekaan Global; Gotong Royong; Bernalar Kritis; Kreatif",
-        tps: [
-          "10.21 Menjelaskan syarat, faktor pendorong, serta proses interaksi sosial asosiatif dan disosiatif.",
-          "10.22 Mengidentifikasi komponen dan proses komunikasi dalam interaksi sosial.",
-          "10.23 Mengidentifikasi tipe, bentuk, dan pengaruh sosialisasi dalam masyarakat.",
-          "10.24 Mengidentifikasi karakteristik, jenis, dan fungsi lembaga sosial serta menganalisis pemecahan masalah dinamika sosial."
-        ],
-        summary: "Mengulas syarat dan proses interaksi sosial (asosiatif & disosiatif), komunikasi, sosialisasi, fungsi lembaga sosial, serta penanganan dinamika sosial.",
-        quiz: [
-          {
-            q: "Syarat utama terjadinya interaksi sosial adalah...",
-            opts: ["Kontak sosial dan komunikasi", "Modal uang dan bangunan", "Lokasi yang selalu berdekatan tanpa pesan"],
-            ans: 0,
-            exp: "Interaksi sosial berlangsung apabila terdapat kontak sosial dan komunikasi."
-          },
-          {
-            q: "Bentuk interaksi sosial yang mengarah pada kerja sama dan integrasi disebut proses...",
-            opts: ["Asosiatif", "Disosiatif", "Isolatif"],
-            ans: 0,
-            exp: "Proses asosiatif meliputi kerja sama, akomodasi, asimilasi, dan akulturasi."
-          }
-        ]
-      },
-      {
-        id: "m7",
-        no: 7,
-        smt: 2,
-        jp: "10 JP",
-        title: "7. Perilaku Ekonomi dan Kesejahteraan Sosial",
-        dims: "Gotong Royong; Bernalar Kritis; Kreatif",
-        tps: [
-          "10.25 Mengidentifikasi kebutuhan, penyebab kelangkaan, serta menganalisis hubungan tindakan, motif, dan prinsip ekonomi.",
-          "10.26 Mengklasifikasikan kegiatan ekonomi (produksi, distribusi, konsumsi) dan peran pelaku ekonomi (RTK, RTP, RTN).",
-          "10.27 Menganalisis hubungan permintaan, penawaran, harga, jenis pasar, serta faktor penyebab inflasi.",
-          "10.28 Menjelaskan peran lembaga keuangan, syarat/fungsi uang, penerapan pengelolaan keuangan, serta hak/kewajiban jasa keuangan."
-        ],
-        summary: "Menganalisis kelangkaan dan prinsip ekonomi, produksi-distribusi-konsumsi, permintaan-penawaran & inflasi, serta lembaga keuangan dan pengelolaan keuangan pribadi/usaha.",
-        quiz: [
-          {
-            q: "Kelangkaan sumber daya ekonomi terjadi ketika...",
-            opts: ["Kebutuhan manusia yang tidak terbatas dihadapkan pada sumber daya yang terbatas", "Barang melimpah tanpa batas", "Tidak ada aktivitas produksi"],
-            ans: 0,
-            exp: "Kelangkaan muncul akibat keterbatasan alat pemuas kebutuhan relatif terhadap kebutuhan yang terus bertambah."
-          },
-          {
-            q: "Kegiatan menyalurkan barang dan jasa dari produsen ke konsumen disebut...",
-            opts: ["Distribusi", "Konsumsi", "Ekstraksi"],
-            ans: 0,
-            exp: "Distribusi adalah kegiatan menyalurkan barang/jasa agar sampai kepada konsumen."
-          }
-        ]
-      }
-    ];
-
-    let state = {
-      name: "",
-      kelas: "",
-      selectedId: "m1",
-      quizAnswers: {},
-      scoresByTopic: {},
-      lkpdByTopic: {}
-    };
-
-    function getKktpLabel(nilai) {
-      if (nilai <= 40) return "0–40: Belum mencapai ketuntasan (Remedial seluruh bagian)";
-      if (nilai <= 65) return "41–65: Belum mencapai ketuntasan (Remedial bagian diperlukan)";
-      if (nilai <= 85) return "66–85: Sudah mencapai ketuntasan (Tidak perlu remedial)";
-      return "86–100: Sudah mencapai ketuntasan (Pengayaan / tantangan lebih)";
-    }
-
-    function getCurrentTopic() {
-      return ATP_DATA.find((t) => t.id === state.selectedId) || ATP_DATA[0];
-    }
-
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) state = { ...state, ...JSON.parse(raw) };
-      } catch (e) {}
-
-      document.getElementById("studentName").value = state.name || "";
-      document.getElementById("studentClass").value = state.kelas || "";
-      updateIdentityBadge();
-      selectTopic(state.selectedId || "m1", false);
-    }
-
-    function saveState() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
-    }
-
-    function saveIdentity() {
-      state.name = document.getElementById("studentName").value.trim();
-      state.kelas = document.getElementById("studentClass").value.trim();
-      updateIdentityBadge();
-      saveState();
-    }
-
-    function updateIdentityBadge() {
-      const badge = document.getElementById("identityBadge");
-      if (state.name && state.kelas) {
-        badge.textContent = `✓ ${state.name} (${state.kelas})`;
-        badge.style.background = "var(--success-soft)";
-        badge.style.color = "var(--success)";
-      } else {
-        badge.textContent = "Belum lengkap";
-        badge.style.background = "var(--warn-soft)";
-        badge.style.color = "var(--warn)";
-      }
-    }
-
-    function buildTopicNavs() {
-      const s1 = document.getElementById("navSmt1");
-      const s2 = document.getElementById("navSmt2");
-      const sel = document.getElementById("topicSelect");
-
-      s1.innerHTML = "";
-      s2.innerHTML = "";
-      sel.innerHTML = "";
-
-      ATP_DATA.forEach((t) => {
-        const btn = document.createElement("button");
-        btn.className = "nav-btn" + (t.id === state.selectedId ? " active" : "");
-        btn.textContent = t.title;
-        btn.onclick = () => {
-          selectTopic(t.id);
-          document.getElementById("sidebar").classList.remove("open");
-        };
-        if (t.smt === 1) s1.appendChild(btn);
-        else s2.appendChild(btn);
-
-        const opt = document.createElement("option");
-        opt.value = t.id;
-        opt.textContent = `${t.title} (Smt ${t.smt} • ${t.jp})`;
-        if (t.id === state.selectedId) opt.selected = true;
-        sel.appendChild(opt);
-      });
-    }
-
-    function selectTopic(topicId, shouldSave = true) {
-      state.selectedId = topicId;
-      if (shouldSave) saveState();
-      buildTopicNavs();
-
-      const t = getCurrentTopic();
-      document.getElementById("topicTitle").textContent = t.title;
-      document.getElementById("topicMeta").innerHTML = `
-        <span class="chip">Semester ${t.smt}</span>
-        <span class="chip alt">${t.jp}</span>
-        <span class="chip">Profil Lulusan: ${t.dims}</span>
-      `;
-      document.getElementById("tpList").innerHTML = t.tps.map((tp) => `<li>${tp}</li>`).join("");
-      document.getElementById("conceptSummary").textContent = t.summary;
-
-      renderQuizForTopic(t);
-      loadLkpdForTopic(t.id);
-
-      const resBanner = document.getElementById("quizResultBanner");
-      if (state.scoresByTopic[t.id]) {
-        resBanner.className = "status-banner show ok";
-        resBanner.textContent = `Skor tersimpan: ${state.scoresByTopic[t.id].text} — ${state.scoresByTopic[t.id].kktp}`;
-      } else {
-        resBanner.className = "status-banner";
-        resBanner.textContent = "";
-      }
-    }
-
-    function renderQuizForTopic(t) {
-      const ansMap = state.quizAnswers[t.id] || {};
-      document.getElementById("quizBox").innerHTML = t.quiz.map((item, qIdx) => `
-        <div class="quiz-item">
-          <strong>${qIdx + 1}. ${item.q}</strong>
-          <div style="margin-top:8px;">
-            ${item.opts.map((opt, oIdx) => `
-              <label class="option-label">
-                <input type="radio" name="q_${t.id}_${qIdx}" value="${oIdx}" ${ansMap[qIdx] === oIdx ? "checked" : ""} onchange="saveQuizAns('${t.id}', ${qIdx}, ${oIdx})" />
-                <span>${opt}</span>
-              </label>
-            `).join("")}
+      <div class="card">
+        <h3>B. Lingkungan Hidup & Komponen Ekosistem</h3>
+        <p><b>Lingkungan:</b> Kondisi fisik dan kimiawi yang mendukung kehidupan. <b>Lingkungan hidup:</b> Interaksi antara komponen biotik dan abiotik yang membentuk <b>Ekosistem</b>.</p>
+        <div class="grid-2">
+          <div class="mini-box">
+            <strong>1. Komponen Biotik (Makhluk Hidup)</strong>
+            <b>Berdasarkan Tingkat Organisasi:</b> Individu → Populasi → Komunitas → Ekosistem → Biosfer.<br><br>
+            <b>Berdasarkan Peranan:</b>
+            <ul class="styled-list">
+              <li><b>Autotrof (Produsen):</b> Membuat makanan sendiri (tumbuhan hijau).</li>
+              <li><b>Heterotrof:</b> Konsumen primer (Herbivor), Konsumen sekunder (Karnivor/Omnivor), Konsumen tersier (Karnivor puncak), dan <b>Pengurai (Dekomposer)</b>.</li>
+            </ul>
           </div>
-          <div class="feedback" id="qfb_${qIdx}"></div>
+          <div class="mini-box pink">
+            <strong>2. Komponen Abiotik (Benda Tak Hidup)</strong>
+            Faktor fisik dan kimiawi yang memengaruhi ketahanan makhluk hidup di ekosistem:
+            <ul class="styled-list">
+              <li>Sinar matahari</li>
+              <li>Suhu</li>
+              <li>Air</li>
+              <li>Udara</li>
+              <li>Tanah</li>
+            </ul>
+          </div>
         </div>
-      `).join("");
-    }
+      </div>
 
-    function saveQuizAns(topicId, qIdx, oIdx) {
-      if (!state.quizAnswers[topicId]) state.quizAnswers[topicId] = {};
-      state.quizAnswers[topicId][qIdx] = oIdx;
-      saveState();
-    }
+      <div class="card">
+        <h3>C. Interaksi Antarkomponen Ekosistem</h3>
+        <h4>1. Interaksi Antarkomponen Biotik</h4>
+        <div class="grid-3">
+          <div class="mini-box">
+            <strong>Kompetisi</strong>
+            Persaingan antarindividu/spesies memperebutkan makanan, habitat, atau pasangan hidup.
+          </div>
+          <div class="mini-box pink">
+            <strong>Predasi</strong>
+            Hubungan pemangsa (predator/karnivor) dan mangsa (herbivor).
+          </div>
+          <div class="mini-box green">
+            <strong>Simbiosis</strong>
+            <ul class="styled-list">
+              <li><b>Mutualisme:</b> Saling menguntungkan.</li>
+              <li><b>Komensalisme:</b> Satu untung, satu tidak dirugikan.</li>
+              <li><b>Parasitisme:</b> Satu untung, satu dirugikan.</li>
+              <li><b>Netralisme:</b> Tidak saling mengganggu.</li>
+            </ul>
+          </div>
+        </div>
+        <h4>2. Interaksi Biotik dan Abiotik</h4>
+        <p>Membentuk aliran energi dan materi melalui <b>Rantai Makanan</b> (Produsen → Konsumen I → Konsumen II → Konsumen III), <b>Jaring-jaring Makanan</b>, serta <b>Siklus Materi</b> (unsur kimia berputar secara kontinu dari lingkungan ke makhluk hidup dan kembali lagi).</p>
 
-    function evaluateQuiz() {
-      const t = getCurrentTopic();
-      const ansMap = state.quizAnswers[t.id] || {};
-      let okCount = 0;
+        <div class="sim-panel">
+          <h4>🔬 Simulasi Interaktif: Detektor Interaksi Ekosistem</h4>
+          <p style="font-size:13px;">Pilih pasangan organisme di bawah ini untuk menganalisis jenis interaksi ekologisnya:</p>
+          <div class="sim-controls">
+            <div class="control-group">
+              <label>Pilih Pasangan Organisme</label>
+              <select id="sim-eco" onchange="runEcoSim()">
+                <option value="lebah">Lebah dan Bunga</option>
+                <option value="anggrek">Tanaman Anggrek dan Pohon Mangga</option>
+                <option value="benalu">Benalu dan Pohon Inang</option>
+                <option value="singa">Singa dan Rusa di Sabana</option>
+                <option value="sapi">Sapi dan Kambing di Padang Rumput yang Sama</option>
+              </select>
+            </div>
+          </div>
+          <div class="sim-result" id="sim-eco-res">Interaksi: <b>Simbiosis Mutualisme</b> — Lebah mendapat nektar, bunga terbantu penyerbukannya.</div>
+        </div>
+      </div>
 
-      t.quiz.forEach((item, idx) => {
-        const chosen = ansMap[idx];
-        const fb = document.getElementById("qfb_" + idx);
-        fb.classList.add("show");
-        if (chosen === item.ans) {
-          okCount++;
-          fb.className = "feedback show ok";
-          fb.textContent = "✓ Benar — " + item.exp;
-        } else {
-          fb.className = "feedback show bad";
-          fb.textContent = "✕ Kurang tepat (Kunci: " + item.opts[item.ans] + ") — " + item.exp;
-        }
-      });
+      <div class="card">
+        <h3>D. Pencemaran Lingkungan & Konservasi</h3>
+        <p>Menurut <b>UU No. 32 Tahun 2009</b>, pencemaran lingkungan adalah masuk atau dimasukkannya makhluk hidup, zat, energi, dan/atau komponen lain ke dalam lingkungan hidup oleh kegiatan manusia sehingga kualitasnya turun dan tidak berfungsi sebagaimana mestinya.</p>
+        <div class="grid-2">
+          <div class="mini-box pink">
+            <strong>Jenis & Dampak Pencemaran</strong>
+            <b>Jenis:</b> Pencemaran Air, Udara, dan Tanah.<br>
+            <b>Dampak:</b> Munculnya berbagai penyakit, punahnya spesies, ledakan hama, dan ketidakseimbangan lingkungan.
+          </div>
+          <div class="mini-box green">
+            <strong>Alasan & Upaya Konservasi</strong>
+            <b>Alasan:</b> Status kelangkaan flora/fauna, mencegah pemanasan global, menjaga hutan hujan tropis (sumber obat & industri), serta melindungi ekosistem laut.<br>
+            <b>Upaya:</b> Pemilahan & daur ulang sampah, pengolahan limbah B3, pengawasan pestisida, reboisasi, dan edukasi lingkungan.
+          </div>
+        </div>
+      </div>
+    `,
+    flashcards: [
+      { q: "Apa perbedaan utama pertumbuhan dan perkembangan?", a: "Pertumbuhan adalah perubahan ukuran (panjang, massa, volume) yang dapat diukur, sedangkan perkembangan adalah proses menuju kedewasaan." },
+      { q: "Sebutkan urutan saluran pernapasan manusia!", a: "Hidung → Faring → Laring → Trakea → Bronkus → Bronkiolus → Alveolus." },
+      { q: "Apa fungsi kantong udara (air sacs) pada burung (Aves)?", a: "Sebagai alat bantu pernapasan ketika burung sedang terbang." },
+      { q: "Sebutkan 3 alat pernapasan pada tumbuhan!", a: "Stomata (daun), Lentisel (batang), dan Rambut akar." },
+      { q: "Apa dasar hukum definisi pencemaran lingkungan di Indonesia?", a: "UU No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup." }
+    ],
+    quiz: [
+      { q: "Ciri makhluk hidup yang membedakan tanaman putri malu mengatup saat disentuh adalah...", opts: ["Adaptasi morfologi", "Peka terhadap rangsangan (iritabilitas)", "Ekskresi", "Respirasi"], ans: 1, exp: "Menanggapi rangsangan sentuhan dari luar disebut iritabilitas (peka terhadap rangsang)." },
+      { q: "Dalam tingkatan organisasi kehidupan, kumpulan beberapa populasi yang saling berinteraksi di suatu tempat disebut...", opts: ["Individu", "Ekosistem", "Komunitas", "Biosfer"], ans: 2, exp: "Urutannya: Individu → Populasi → Komunitas → Ekosistem → Biosfer." },
+      { q: "Berikut ini yang termasuk nutrisi mikronutrien adalah...", opts: ["Karbohidrat dan lemak", "Protein dan karbohidrat", "Vitamin dan mineral", "Lemak dan protein"], ans: 2, exp: "Mikronutrien dibutuhkan dalam jumlah sedikit, yaitu vitamin dan mineral." }
+    ]
+  },
+  {
+    id: 2,
+    bab: "BAB 2",
+    title: "Zat dan Perubahannya",
+    desc: "Klasifikasi materi (wujud & komposisi), pemisahan campuran, sifat fisis/kimia, pengukuran & angka penting, perubahan materi, serta pengelolaan B3.",
+    materiHTML: `
+      <div class="card">
+        <h3>A. Klasifikasi Materi</h3>
+        <h4>1. Berdasarkan Wujud Materi</h4>
+        <table class="data-table">
+          <thead>
+            <tr><th>Aspek</th><th>Padat</th><th>Cair</th><th>Gas</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Bentuk & Volume</b></td><td>Bentuk tetap, volume tetap</td><td>Bentuk berubah, volume tetap</td><td>Bentuk & volume berubah</td></tr>
+            <tr><td><b>Jarak & Gaya Tarik</b></td><td>Rapat, gaya tarik sangat kuat</td><td>Renggang, gaya tarik lemah</td><td>Sangat renggang, gaya tarik sangat lemah</td></tr>
+            <tr><td><b>Gerak Partikel</b></td><td>Bergetar di tempat</td><td>Bebas namun tetap dalam gugus</td><td>Sangat bebas meninggalkan kelompok</td></tr>
+            <tr><td><b>Contoh</b></td><td>Batu, emas, besi</td><td>Air, minyak, bensin</td><td>Oksigen, uap air, asap</td></tr>
+          </tbody>
+        </table>
 
-      const nilai = Math.round((okCount / t.quiz.length) * 100);
-      const kktpDesc = getKktpLabel(nilai);
-      const scoreText = `${nilai} (${okCount}/${t.quiz.length})`;
+        <h4>2. Berdasarkan Komposisi Materi</h4>
+        <div class="grid-2">
+          <div class="mini-box">
+            <strong>a. Zat Tunggal (Unsur & Senyawa)</strong>
+            <ul class="styled-list">
+              <li><b>Unsur:</b> Zat tunggal yang tidak dapat diuraikan lagi melalui reaksi kimia biasa. Terdiri atas <i>Logam</i>, <i>Nonlogam</i>, dan <i>Semilogam (Metaloid)</i>. Contoh: Hidrogen (H), Tembaga (Cu), Ozon (O₃).</li>
+              <li><b>Senyawa:</b> Gabungan beberapa unsur berbeda yang berikatan kimia dengan perbandingan massa tetap. Contoh: Air (H₂O).</li>
+            </ul>
+          </div>
+          <div class="mini-box pink">
+            <strong>b. Campuran (Larutan, Koloid, Suspensi)</strong>
+            Gabungan dua zat atau lebih yang masih memiliki sifat aslinya:
+            <ul class="styled-list">
+              <li><b>Larutan (Homogen):</b> Larutan gula, larutan garam.</li>
+              <li><b>Koloid:</b> Susu, santan (emulsi), asap/debu (aerosol padat), kabut/awan (aerosol), keju (emulsi padat), busa sabun (buih), kaca berwarna (sol padat).</li>
+              <li><b>Suspensi (Heterogen):</b> Campuran pasir & air, air sungai keruh.</li>
+            </ul>
+          </div>
+        </div>
 
-      state.scoresByTopic[t.id] = { nilai, text: scoreText, kktp: kktpDesc };
-      saveState();
+        <h4>3. Metode Pemisahan Campuran</h4>
+        <div class="grid-3">
+          <div class="mini-box"><strong>1. Filtrasi</strong>Penyaringan padatan dari cairan menggunakan kertas saring (menghasilkan residu dan filtrat).</div>
+          <div class="mini-box"><strong>2. Dekantasi</strong>Menuangkan cairan secara perlahan dari endapan sedimen menggunakan batang pengaduk.</div>
+          <div class="mini-box"><strong>3. Kristalisasi</strong>Penguapan pelarut untuk memperoleh kristal zat padat (contoh: pembuatan garam laut).</div>
+          <div class="mini-box pink"><strong>4. Sublimasi</strong>Pemisahan zat yang dapat menyublim (contoh: kapur barus, <i>dry ice</i>).</div>
+          <div class="mini-box pink"><strong>5. Distilasi</strong>Penyulingan berdasarkan perbedaan titik didih zat cair.</div>
+          <div class="mini-box pink"><strong>6. Kromatografi</strong>Pemisahan berdasarkan perbedaan kecepatan perambatan komponen pada medium diam (misal pemisahan warna tinta).</div>
+        </div>
+      </div>
 
-      const banner = document.getElementById("quizResultBanner");
-      banner.className = "status-banner show ok";
-      banner.textContent = `Nilai: ${scoreText} | Status KKTP: ${kktpDesc}`;
-    }
+      <div class="card">
+        <h3>B. Sifat Materi dan Pengukurannya</h3>
+        <p><b>Sifat Fisis:</b> Dapat diamati dan diukur (Besaran Pokok: Massa [kg], Panjang [m], Waktu [s], Suhu [K], Kuat Arus [A], Intensitas Cahaya [cd], Jumlah Zat [mol]; serta Besaran Turunan seperti Volume, Gaya, Massa Jenis, Tekanan).<br>
+        <b>Sifat Kimia:</b> Berkaitan dengan reaksi zat, seperti mudah terbakar, mudah membusuk, dan korosif.</p>
+        
+        <div class="formula-box">
+          • Ketidakpastian Pengukuran Tunggal: Δx = ½ × skala terkecil alat ukur → Hasil: x = x₀ ± Δx<br>
+          • Ketidakpastian Relatif (KR): KR = (Δx / x) × 100%<br>
+          • Aturan Angka Penting (AP): KR ≥ 10% (2 AP) | 10% > KR ≥ 1% (3 AP) | KR < 1% (4 AP)<br>
+          • Ketelitian Alat: Jangka Sorong (0,1 – 0,02 mm) | Mikrometer Sekrup (0,01 mm) | Neraca Tiga Lengan (0,1 g)
+        </div>
 
-    function loadLkpdForTopic(topicId) {
-      const d = state.lkpdByTopic[topicId] || {};
-      document.getElementById("lkpdTitle").value = d.title || "";
-      document.getElementById("lkpdAnalysis").value = d.analysis || "";
-      document.getElementById("lkpdAction").value = d.action || "";
-      document.getElementById("refMindful").value = d.mindful || "";
-      document.getElementById("refMeaningful").value = d.meaningful || "";
-    }
+        <div class="sim-panel">
+          <h4>📏 Simulasi Alat Ukur Presisi (Mikrometer Sekrup & Neraca 3 Lengan)</h4>
+          <div class="sim-controls">
+            <div class="control-group">
+              <label>Skala Utama Mikrometer (mm)</label>
+              <input type="number" id="mikro-su" value="42.5" step="0.5" min="0" max="50" oninput="calcMikro()">
+            </div>
+            <div class="control-group">
+              <label>Skala Nonius Putar (0 - 49)</label>
+              <input type="number" id="mikro-sn" value="49" min="0" max="49" oninput="calcMikro()">
+            </div>
+          </div>
+          <div class="sim-result" id="mikro-res">Hasil Pengukuran: 42.5 + 0.49 = <b>(42.99 ± 0.005) mm</b></div>
+        </div>
+      </div>
 
-    function saveLkpd() {
-      const t = getCurrentTopic();
-      state.lkpdByTopic[t.id] = {
-        title: document.getElementById("lkpdTitle").value,
-        analysis: document.getElementById("lkpdAnalysis").value,
-        action: document.getElementById("lkpdAction").value,
-        mindful: document.getElementById("refMindful").value,
-        meaningful: document.getElementById("refMeaningful").value
-      };
-      saveState();
-    }
+      <div class="card">
+        <h3>C. Perubahan Materi & D. Bahan Berbahaya dan Beracun (B3)</h3>
+        <div class="grid-3">
+          <div class="mini-box">
+            <strong>1. Perubahan Fisika</strong>
+            Tidak menghasilkan zat baru (reversibel): perubahan wujud (mencair, menguap, menyublim menyerap panas; membeku, mengembun, deposisi melepas panas), pelarutan, pengecoran logam, ekstraksi kopi.
+          </div>
+          <div class="mini-box pink">
+            <strong>2. Perubahan Kimia</strong>
+            Menghasilkan zat baru yang sifatnya berbeda (irreversibel): pembakaran kayu dan perkaratan (korosi) besi.
+          </div>
+          <div class="mini-box green">
+            <strong>3. Perubahan Biologi</strong>
+            Perubahan kimia akibat aktivitas organisme biotik: fotosintesis, fermentasi (peragian), pembusukan (dekomposisi), dan pelapukan oleh lumut.
+          </div>
+        </div>
+        <h4>Klasifikasi & Pengelolaan B3</h4>
+        <p>Menurut PP RI, B3 dibagi menjadi B3 yang dapat digunakan, dilarang digunakan, dan terbatas penggunaannya. Menurut standar <b>NFPA (kode 0–4)</b>, bahaya diklasifikasikan dalam 4 kuadran warna: <b>Biru</b> (Bahaya Kesehatan), <b>Merah</b> (Mudah Terbakar/Titik Nyala), <b>Kuning</b> (Kereaktifan/Ketakstabilan), dan <b>Putih</b> (Spesifikasi Bahaya: OX, ACID, COR, W dicoret/jangan kena air, Radiasi).</p>
+      </div>
+    `,
+    flashcards: [
+      { q: "Apa perbedaan larutan, koloid, dan suspensi?", a: "Larutan bersifat homogen (gula+air), koloid tampak homogen tapi heterogen secara mikroskopis (susu, kabut), dan suspensi bersifat heterogen serta mengendap (pasir+air)." },
+      { q: "Perubahan wujud mana saja yang menyerap panas?", a: "Mencair, menguap, dan menyublim." },
+      { q: "Berapa ketelitian jangka sorong dan mikrometer sekrup?", a: "Jangka sorong: 0,1 mm – 0,02 mm. Mikrometer sekrup: 0,01 mm." },
+      { q: "Apa arti kode warna biru, merah, dan kuning pada berlian bahaya NFPA?", a: "Biru = Bahaya kesehatan, Merah = Mudah terbakar, Kuning = Kereaktifan/ketakstabilan (skala 0 terendah hingga 4 tertinggi)." }
+    ],
+    quiz: [
+      { q: "Pembuatan garam dari air laut memanfaatkan metode pemisahan campuran berupa...", opts: ["Filtrasi", "Kromatografi", "Kristalisasi", "Sublimasi"], ans: 2, exp: "Air laut diuapkan hingga tertinggal kristal-kristal garam (kristalisasi)." },
+      { q: "Santan dan susu termasuk jenis koloid...", opts: ["Sol", "Emulsi", "Buih", "Aerosol"], ans: 1, exp: "Santan dan susu adalah dispersi fase cair dalam medium pendispersi cair (Emulsi)." },
+      { q: "Peristiwa perkaratan pada besi (korosi) dan pembakaran kayu termasuk...", opts: ["Perubahan fisika", "Perubahan kimia", "Perubahan biologi", "Sublimasi"], ans: 1, exp: "Keduanya menghasilkan zat baru dengan sifat berbeda dan tidak dapat kembali ke bentuk semula." }
+    ]
+  },
+  {
+    id: 3,
+    bab: "BAB 3",
+    title: "Energi dan Perubahannya",
+    desc: "Hukum kekekalan energi, energi mekanik (EP & EK), usaha & efisiensi mesin, sumber energi tak terbarukan vs terbarukan (SHS, PLTMH, PLTA, Bioenergi).",
+    materiHTML: `
+      <div class="card">
+        <h3>A. Konsep Energi dan Usaha</h3>
+        <p><b>Hukum Kekekalan Energi:</b> <i>"Energi tidak dapat diciptakan dan dimusnahkan sehingga jumlahnya tetap, tetapi bentuknya dapat berubah-ubah."</i> Bentuk energi meliputi: Energi Mekanik, Kalor/Termal, Listrik, Kimia, dan Nuklir.</p>
+        <div class="formula-box">
+          • Energi Potensial: EP = m · g · h &nbsp;&nbsp;|&nbsp;&nbsp; Energi Kinetik: EK = ½ · m · v²<br>
+          • Kekekalan Energi Mekanik: EM = EP + EK = Konstan<br>
+          • Usaha (Kerja): W = F · s · cos θ &nbsp;&nbsp;|&nbsp;&nbsp; Hubungan Usaha-Energi: W = ΔEP = ΔEK<br>
+          • Energi Listrik: W = q · V (statis) &nbsp;|&nbsp; W = I² · R · t (rangkaian)<br>
+          • Efisiensi Mesin: η = (W / E) × 100% = (P_out / P_in) × 100%
+        </div>
 
-    function switchStep(stepId) {
-      document.querySelectorAll(".step-section").forEach((s) => s.classList.toggle("hidden-tab", s.id !== stepId));
-      document.querySelectorAll("[data-step]").forEach((b) => b.classList.toggle("active", b.dataset.step === stepId));
-      document.querySelectorAll("[data-bstep]").forEach((b) => b.classList.toggle("active", b.dataset.bstep === stepId));
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+        <div class="sim-panel">
+          <h4>⚡ Kalkulator Energi Mekanik & Usaha Pengereman</h4>
+          <div class="sim-controls">
+            <div class="control-group">
+              <label>Massa Benda m (kg)</label>
+              <input type="number" id="en-m" value="0.2" step="0.1" oninput="calcEnergy()">
+            </div>
+            <div class="control-group">
+              <label>Ketinggian Awal h₁ (m)</label>
+              <input type="number" id="en-h1" value="3" step="0.5" oninput="calcEnergy()">
+            </div>
+            <div class="control-group">
+              <label>Ketinggian Akhir h₂ (m)</label>
+              <input type="number" id="en-h2" value="2" step="0.5" oninput="calcEnergy()">
+            </div>
+          </div>
+          <div class="sim-result" id="en-res">Dengan g = 10 m/s²: EP₁ = 6 J, EP₂ = 4 J → Kecepatan v₂ = <b>√20 (2√5) ≈ 4.47 m/s</b></div>
+        </div>
+      </div>
 
-    function setRole(role) {
-      const isTeacher = role === "teacher";
-      document.body.classList.toggle("teacher-mode", isTeacher);
-      document.getElementById("roleStudentBtn").classList.toggle("active", !isTeacher);
-      document.getElementById("roleTeacherBtn").classList.toggle("active", isTeacher);
-      document.getElementById("btnCpKktp").style.display = isTeacher ? "inline-flex" : "none";
-    }
+      <div class="card">
+        <h3>B. Sumber Energi Tidak Dapat Diperbarui</h3>
+        <div class="grid-3">
+          <div class="mini-box pink">
+            <strong>1. Minyak Bumi</strong>
+            Diolah lewat <i>distilasi bertingkat</i> (primary process) berdasarkan titik didih: Gas/LPG (&lt;25°C), Bensin (25–60°C), Nafta (60–180°C), Avtur/Kerosin (180–220°C), Solar (220–250°C), Pelumas (300–350°C), dan Aspal/Residu (&gt;350°C). Tahap kedua (<i>secondary</i>): cracking, ekstraksi, kristalisasi, treating.
+          </div>
+          <div class="mini-box amber">
+            <strong>2. Batu Bara</strong>
+            Diolah lewat preparation, concentration (jigging, flotasi), dan dewatering. Dimanfaatkan untuk PLTU, industri semen, briket, batu bara cair (coal liquid), dan Dimetil Eter (DME).
+          </div>
+          <div class="mini-box">
+            <strong>3. Energi Nuklir</strong>
+            Dihasilkan melalui <b>reaksi fisi</b> (pembelahan inti Uranium-235 & Plutonium-239) dan <b>reaksi fusi</b> (penggabungan inti Deuterium & Tritium).
+          </div>
+        </div>
+      </div>
 
-    function toggleMobileMenu() { document.getElementById("sidebar").classList.toggle("open"); }
-    function handleSidebarBackdrop(e) { if (e.target.id === "sidebar") e.currentTarget.classList.remove("open"); }
-    function openModal(id) { document.getElementById(id).classList.add("open"); }
-    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+      <div class="card">
+        <h3>C. Sumber Energi Dapat Diperbarui & D. Perubahan Energi</h3>
+        <div class="grid-2">
+          <div class="mini-box green">
+            <strong>1. Matahari (Solar Home System / SHS)</strong>
+            Komponen: Modul panel surya (mengubah cahaya jadi arus DC), Regulator/Controller, Baterai, dan Inverter (mengubah DC menjadi AC).<br>
+            <code>Modul Sel Surya (WP) = Kebutuhan (Wh) / Lama penyinaran (h)</code>
+          </div>
+          <div class="mini-box">
+            <strong>2. Air (PLTMH)</strong>
+            Terbagi menjadi minihidro, mikrohidro, dan pikohidro. Komponen utama: Bendungan, saluran terbuka, bak penenang, pipa pesat (<i>penstock</i>), turbin, dan generator.
+          </div>
+          <div class="mini-box amber">
+            <strong>3. Angin (PLTA / Bayu)</strong>
+            Syarat lokasi ideal: kecepatan angin <b>di atas 5 m/s</b>. Komponen: Turbin, tower, generator, controller, dan baterai.
+          </div>
+          <div class="mini-box pink">
+            <strong>4. Bioenergi</strong>
+            <b>Biodiesel</b> (kelapa sawit, jarak pagar), <b>Bioetanol</b> (tebu, singkong/ubi kayu, jagung, sagu), dan <b>Biogas</b> (fermentasi anaerob kotoran ternak/limbah organik).
+          </div>
+        </div>
+        <h4>Konversi/Perubahan Bentuk Energi</h4>
+        <ul class="styled-list">
+          <li><b>Mekanik → Listrik:</b> Generator AC dan DC.</li>
+          <li><b>Kimia → Listrik:</b> Aki (accumulator) dan baterai kering.</li>
+          <li><b>Listrik → Gerak/Cahaya/Kalor:</b> Motor listrik, lampu, kompor induksi.</li>
+          <li><b>Kalor → Gerak:</b> Pembangkit Listrik Tenaga Panas Bumi (PLTP) dan mesin uap.</li>
+        </ul>
+      </div>
+    `,
+    flashcards: [
+      { q: "Urutkan fraksi distilasi bertingkat minyak bumi dari suhu terendah ke tertinggi!", a: "LPG (<25°C) → Bensin → Nafta → Avtur/Kerosin → Solar → Bahan bakar kapal → Pelumas → Aspal/Residu (>350°C)." },
+      { q: "Apa fungsi Inverter pada sistem panel surya (SHS)?", a: "Mengubah arus searah (DC) dari panel surya/baterai menjadi arus bolak-balik (AC) untuk peralatan rumah tangga." },
+      { q: "Berapa syarat kecepatan angin minimal untuk pendirian pembangkit listrik tenaga angin?", a: "Kecepatan angin di atas 5 m/s." },
+      { q: "Sebutkan 3 jenis utama bioenergi dan bahan bakunya!", a: "Biodiesel (kelapa sawit/jarak), Bioetanol (tebu/singkong/jagung), dan Biogas (kotoran ternak/limbah organik)." }
+    ],
+    quiz: [
+      { q: "Alat yang berfungsi mengubah energi kimia menjadi energi listrik adalah...", opts: ["Generator DC", "Motor listrik", "Aki dan baterai", "Turbin air"], ans: 2, exp: "Aki dan elemen kering menyimpan energi kimia yang dikonversi menjadi energi listrik." },
+      { q: "Pada sistem PLTMH, pipa bertekanan yang mengalirkan air dari bak penenang menuju turbin disebut...", opts: ["Controller", "Inverter", "Penstock (pipa pesat)", "Komutator"], ans: 2, exp: "Pipa pesat (penstock) mengarahkan aliran air bertekanan untuk memutar turbin." },
+      { q: "Benda bermassa 2 kg berada pada ketinggian 5 m (g = 10 m/s²). Energi potensialnya sebesar...", opts: ["10 J", "50 J", "100 J", "250 J"], ans: 2, exp: "EP = m × g × h = 2 × 10 × 5 = 100 Joule." }
+    ]
+  },
+  {
+    id: 4,
+    bab: "BAB 4",
+    title: "Bumi dan Antariksa",
+    desc: "Tata surya & galaksi, gravitasi Newton, struktur bumi (litosfer, hidrosfer, atmosfer), medan magnet, rotasi/revolusi, fase bulan & gerhana, serta mitigasi bencana.",
+    materiHTML: `
+      <div class="card">
+        <h3>A. Sistem Tata Surya & B. Sistem Galaksi</h3>
+        <p><b>Matahari</b> tersusun atas lapisan dalam ke luar: <i>Inti (Core) → Zona Radiasi → Zona Konveksi → Fotosfer → Kromosfer → Korona</i>. Aktivitasnya meliputi granulasi, sunspot, prominence, dan solar flare.</p>
+        <ul class="styled-list">
+          <li><b>8 Planet:</b> Merkurius (bintang fajar), Venus (bintang kejora), Bumi, Mars (planet merah), Jupiter (terbesar), Saturnus (bercincin), Uranus (terdingin), Neptunus (planet biru).</li>
+          <li><b>Benda Langit Lain:</b> <i>Asteroid</i> (sabuk antara Mars & Jupiter; tipe C, S, M, V), <i>Meteor/Meteorit</i>, dan <i>Komet</i> (orbit sangat lonjong).</li>
+          <li><b>Galaksi & Rasi Bintang:</b> Kita berada di Galaksi Bima Sakti (<i>Milky Way</i>). Rasi bintang terkenal: Ursa Mayor, Ursa Minor, Orion, Crux (Gubuk Penceng), dan Scorpion.</li>
+        </ul>
+      </div>
 
-    async function sendToGoogleSheet() {
-      saveIdentity();
-      saveLkpd();
-      const statusEl = document.getElementById("sheetStatus");
+      <div class="card">
+        <h3>C. Gravitasi Bumi & D. Struktur Lapisan Bumi</h3>
+        <div class="formula-box">
+          • Hukum Gravitasi Newton: F = G · (m₁ · m₂) / r² &nbsp;&nbsp;(G = 6,672 × 10⁻¹¹ Nm²/kg²)<br>
+          • Kuat Medan Gravitasi: g = G · M / r² &nbsp;&nbsp;|&nbsp;&nbsp; Gaya Lorentz: F = q · v · B · sin θ
+        </div>
+        <div class="grid-3">
+          <div class="mini-box">
+            <strong>1. Litosfer (Lapisan Batuan)</strong>
+            Struktur: Kerak Bumi, Selimut (Astenosfer & selimut dalam), dan Inti Bumi (inti luar & dalam).<br>
+            Jenis batuan: <b>Batuan Beku</b> (plutonik, korok, vulkanik), <b>Sedimen</b> (klastik, kimiawi, organik), dan <b>Malihan/Metamorf</b>. Terdapat 6 lempeng benua utama & 3 jenis patahan (sesar normal, naik, mendatar).
+          </div>
+          <div class="mini-box pink">
+            <strong>2. Hidrosfer (Perairan)</strong>
+            <b>Daur Hidrologi</b> (pendek, sedang, panjang): Evaporasi → Transpirasi → Kondensasi → Adveksi → Presipitasi → Run off → Perkolasi.<br>
+            Meliputi perairan darat (danau, waduk, rawa, sungai, air tanah) & 5 Samudra (Pasifik, Atlantik, Hindia, Antarktika, Arktik).
+          </div>
+          <div class="mini-box green">
+            <strong>3. Atmosfer (Lapisan Udara)</strong>
+            Urutan dari permukaan Bumi ke luar:<br>
+            1. <b>Troposfer</b> (tempat cuaca/hujan)<br>
+            2. <b>Stratosfer</b> (lapisan ozon)<br>
+            3. <b>Mesosfer</b> (pembakar meteor)<br>
+            4. <b>Termosfer</b> (ionosfer/aurora)<br>
+            5. <b>Eksosfer</b> (batas luar angkasa)
+          </div>
+        </div>
+      </div>
 
-      if (!state.name || !state.kelas) {
-        alert("Mohon lengkapi Nama Lengkap dan Kelas terlebih dahulu.");
-        document.getElementById("studentName").focus();
-        return;
-      }
+      <div class="card">
+        <h3>E. Medan Magnet, F. Gerak Bumi, G. Bulan & H. Mitigasi Bencana</h3>
+        <div class="grid-2">
+          <div class="mini-box amber">
+            <strong>Rotasi vs Revolusi Bumi</strong>
+            <b>Rotasi Bumi:</b> Siang-malam, pembagian zona waktu, gerak semu harian matahari, pembelokan arus laut.<br>
+            <b>Revolusi Bumi:</b> Perubahan musim, perbedaan lama siang-malam, gerak semu tahunan matahari, perubahan rasi bintang, dan tahun kabisat.
+          </div>
+          <div class="mini-box">
+            <strong>Bulan & Gerhana</strong>
+            Periode sinodis Bulan = <b>29,53 hari</b> (dasar kalender Hijriah & Jawa).<br>
+            <b>Gerhana Bulan:</b> Matahari — Bumi — Bulan.<br>
+            <b>Gerhana Matahari:</b> Matahari — Bulan — Bumi.
+          </div>
+        </div>
+        <h4>Mitigasi Bencana Alam</h4>
+        <p><b>Prabencana:</b> Pencegahan (fisik & nonfisik), kesiapsiagaan, peringatan dini. &nbsp;|&nbsp; <b>Saat Bencana:</b> Penyelamatan diri, pengungsian, bantuan darurat, pendampingan psikoterapi. &nbsp;|&nbsp; <b>Pascabencana:</b> Pemulihan (recovery), rehabilitasi, rekonstruksi, dan evaluasi.</p>
+      </div>
+    `,
+    flashcards: [
+      { q: "Urutkan lapisan atmosfer Bumi dari yang paling bawah ke atas!", a: "Troposfer → Stratosfer → Mesosfer → Termosfer → Eksosfer." },
+      { q: "Apa perbedaan posisi benda langit saat Gerhana Bulan dan Gerhana Matahari?", a: "Gerhana Bulan: Matahari - Bumi - Bulan. Gerhana Matahari: Matahari - Bulan - Bumi." },
+      { q: "Sebutkan 3 kelompok batuan penyusun litosfer!", a: "Batuan beku (igneous), batuan sedimen, dan batuan malihan (metamorfik)." },
+      { q: "Mengapa permukaan Bulan yang menghadap Bumi selalu sama?", a: "Karena kala rotasi Bulan sama dengan kala revolusinya mengelilingi Bumi." }
+    ],
+    quiz: [
+      { q: "Lapisan atmosfer yang berfungsi melindungi Bumi dari jatuhnya meteor karena membakarnya di udara adalah...", opts: ["Troposfer", "Stratosfer", "Mesosfer", "Eksosfer"], ans: 2, exp: "Mesosfer adalah lapisan dingin yang membakar benda langit/meteor sebelum mencapai permukaan Bumi." },
+      { q: "Fenomena berikut yang merupakan akibat dari revolusi Bumi adalah...", opts: ["Pergantian siang dan malam", "Pembagian zona waktu WIB, WITA, WIT", "Perubahan musim dan tahun kabisat", "Gerak semu harian Matahari"], ans: 2, exp: "Revolusi Bumi mengelilingi Matahari menyebabkan perubahan musim, rasi bintang, dan tahun kabisat." },
+      { q: "Titik di dalam kerak Bumi tempat sumber gempa bumi pertama kali terjadi disebut...", opts: ["Episentrum", "Hiposentrum", "Seismograf", "Astenosfer"], ans: 1, exp: "Hiposentrum adalah pusat gempa di kedalaman bumi, sedangkan episentrum adalah titik di permukaan tegak lurus di atasnya." }
+    ]
+  },
+  {
+    id: 5,
+    bab: "BAB 5",
+    title: "Keruangan serta Konektivitas Antarruang dan Waktu",
+    desc: "Syarat interaksi keruangan, migrasi/komunikasi/transportasi, kondisi geografis & sosial Indonesia, serta kerja sama bilateral, regional, dan multilateral.",
+    materiHTML: `
+      <div class="card">
+        <h3>A. Interaksi Keruangan dan Waktu</h3>
+        <p><b>Ruang</b> meliputi darat, perairan, udara, beserta organisme di dalamnya. <b>Waktu</b> terbagi atas waktu lampau, sekarang, dan akan datang.</p>
+        <div class="grid-3">
+          <div class="mini-box">
+            <strong>1. Complementarity</strong>
+            Wilayah saling melengkapi karena perbedaan komoditas/sumber daya (misal wilayah pantai penghasil ikan dengan pegunungan penghasil sayuran).
+          </div>
+          <div class="mini-box pink">
+            <strong>2. Intervening Opportunity</strong>
+            Kesempatan antara; munculnya lokasi alternatif yang lebih dekat/menguntungkan sehingga melemahkan interaksi dua wilayah awal.
+          </div>
+          <div class="mini-box green">
+            <strong>3. Transferability</strong>
+            Kemudahan pemindahan barang/orang yang dipengaruhi infrastruktur transportasi dan jaringan komunikasi.
+          </div>
+        </div>
+        <h4>Bentuk Interaksi Keruangan</h4>
+        <ul class="styled-list">
+          <li><b>Perpindahan Penduduk (Migrasi):</b> Imigrasi, Emigrasi, Urbanisasi, Ruralisasi, Komutasi (ulang-alik harian), Sirkulasi, Evakuasi, dan Transmigrasi.</li>
+          <li><b>Komunikasi:</b> Pertukaran ide/informasi melalui siaran TV, streaming, website, dan marketplace.</li>
+          <li><b>Transportasi:</b> Pergerakan barang & jasa (perdagangan ekspor-impor dan distribusi komoditas).</li>
+        </ul>
+      </div>
 
-      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("TEMPEL_URL_APPS_SCRIPT_EXEC_ANDA_DISINI")) {
-        statusEl.className = "status-banner show warn";
-        statusEl.textContent = "URL Google Apps Script belum dipasang pada variabel GOOGLE_SCRIPT_URL di kode index.html.";
-        return;
-      }
+      <div class="card">
+        <h3>B. Kondisi Geografis & C. Kondisi Sosial Indonesia</h3>
+        <div class="grid-2">
+          <div class="mini-box">
+            <strong>Letak & Luas Indonesia (± 7,81 juta km²)</strong>
+            <ul class="styled-list">
+              <li><b>Astronomis:</b> 6° LU – 11° LS dan 95° BT – 141° BT.</li>
+              <li><b>Geografis:</b> Di antara Benua Asia & Australia serta Samudra Hindia & Pasifik.</li>
+              <li><b>Geologis:</b> Pertemuan 3 lempeng (Eurasia, Indo-Australia, Pasifik) dan dilalui Sirkum Pasifik & Sirkum Mediterania.</li>
+              <li><b>Batas Laut:</b> Laut Teritorial (12 mil), Landas Kontinen, dan ZEE (200 mil).</li>
+            </ul>
+          </div>
+          <div class="mini-box amber">
+            <strong>Kondisi Sosial, Ekonomi & Politik</strong>
+            <ul class="styled-list">
+              <li><b>Demografi (Sensus 2020):</b> Total penduduk 270,2 juta jiwa; didominasi <b>Generasi Z</b> (71,5 juta / 27,94%) dan <b>Milenial</b> (69,7 juta / 25,87%).</li>
+              <li><b>Ekonomi:</b> Sektor utama meliputi Pertanian, Perdagangan, dan Industri.</li>
+              <li><b>Politik:</b> Negara Republik demokrasi dengan prinsip politik luar negeri <b>bebas aktif</b>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
-      const t = getCurrentTopic();
-      const lkpd = state.lkpdByTopic[t.id] || {};
-      const sc = state.scoresByTopic[t.id];
+      <div class="card">
+        <h3>D. Kerja Sama Antarnegara</h3>
+        <div class="grid-3">
+          <div class="mini-box">
+            <strong>1. Kerja Sama Bilateral</strong>
+            Dilakukan antara <b>dua negara</b> secara timbal balik di bidang hukum, ekonomi, pendidikan, sosial budaya, dan pertahanan.
+          </div>
+          <div class="mini-box pink">
+            <strong>2. Kerja Sama Regional</strong>
+            Antarnegara dalam satu kawasan.
+            <ul class="styled-list">
+              <li><b>ASEAN (8 Agustus 1967):</b> Diprakarsai 5 negara (Indonesia - Adam Malik, Malaysia - Tun Abdul Razak, Singapura - S. Rajaratnam, Filipina - Narciso Ramos, Thailand - Thanat Khoman).</li>
+              <li><b>APEC:</b> Kerja sama ekonomi 21 negara Asia-Pasifik (prinsip consensus, voluntary, concerted unilateralism, differentiated time frame).</li>
+            </ul>
+          </div>
+          <div class="mini-box green">
+            <strong>3. Kerja Sama Multilateral</strong>
+            Melibatkan banyak negara lintas kawasan: <b>PBB (UN)</b> (Majelis Umum, Dewan Keamanan, ECOSOC, Dewan Perwalian, Mahkamah Internasional, Sekretariat), <b>WTO</b>, <b>IMF</b>, dan <b>OKI (OIC)</b>.
+          </div>
+        </div>
+      </div>
+    `,
+    flashcards: [
+      { q: "Sebutkan 3 prasyarat dasar terjadinya interaksi keruangan!", a: "1. Complementarity (saling melengkapi), 2. Intervening opportunity (kesempatan antara), 3. Transferability (kemudahan perpindahan)." },
+      { q: "Apa perbedaan komutasi dan urbanisasi?", a: "Komutasi adalah perpindahan penduduk harian (ulang-alik) tanpa menetap, sedangkan urbanisasi adalah perpindahan dari desa ke kota untuk menetap." },
+      { q: "Siapa saja 5 tokoh pendiri ASEAN pada 8 Agustus 1967 di Bangkok?", a: "Adam Malik (Indonesia), Tun Abdul Razak (Malaysia), S. Rajaratnam (Singapura), Narciso Ramos (Filipina), dan Thanat Khoman (Thailand)." },
+      { q: "Sebutkan letak astronomis Indonesia!", a: "6° Lintang Utara (LU) – 11° Lintang Selatan (LS) dan 95° Bujur Timur (BT) – 141° Bujur Timur (BT)." }
+    ],
+    quiz: [
+      { q: "Wilayah A biasa membeli sayuran ke wilayah B. Namun setelah dibangun jalan tol ke wilayah C yang juga penghasil sayuran dan lebih dekat, wilayah A beralih ke wilayah C. Kondisi ini disebut...", opts: ["Complementarity", "Intervening opportunity", "Transferability", "Urbanisasi"], ans: 1, exp: "Wilayah C berperan sebagai kesempatan antara (intervening opportunity) yang melemahkan interaksi A dan B." },
+      { q: "Berikut ini yang merupakan organisasi kerja sama multilateral adalah...", opts: ["ASEAN", "APEC", "PBB dan WTO", "Kerja sama RI–Jepang"], ans: 2, exp: "PBB dan WTO melibatkan banyak negara dari berbagai kawasan dunia (multilateral)." },
+      { q: "Prinsip politik luar negeri Indonesia adalah...", opts: ["Blok Barat", "Bebas aktif", "Isolasionisme", "Non-intervensi mutlak"], ans: 1, exp: "Indonesia menganut politik luar negeri bebas aktif dalam membina hubungan internasional." }
+    ]
+  },
+  {
+    id: 6,
+    bab: "BAB 6",
+    title: "Interaksi Sosial dan Dinamika Sosial",
+    desc: "Syarat & faktor interaksi sosial, proses asosiatif & disosiatif, keteraturan sosial, komunikasi, sosialisasi, lembaga sosial, serta pemecahan masalah sosial.",
+    materiHTML: `
+      <div class="card">
+        <h3>A. Interaksi Sosial & B. Komunikasi</h3>
+        <p><b>Syarat Interaksi Sosial:</b> (1) <b>Kontak Sosial</b> (primer, sekunder langsung, sekunder tidak langsung) dan (2) <b>Komunikasi</b> (komunikator, komunikan, pesan, media/channel, efek/feedback).</p>
+        <p><b>Faktor Pendorong:</b> Imitasi (meniru), Sugesti (pengaruh), Identifikasi (menyamakan diri), Simpati (tertarik/peduli), dan Empati (merasakan secara mendalam).</p>
+        <div class="grid-2">
+          <div class="mini-box green">
+            <strong>Interaksi Sosial Asosiatif (Mengarah ke Persatuan)</strong>
+            <ul class="styled-list">
+              <li><b>Kerja Sama:</b> Gotong royong, tawar-menawar, kooptasi, koalisi, joint venture.</li>
+              <li><b>Akomodasi:</b> Koersi, kompromi, arbitrase, mediasi, konsiliasi, toleransi, ajudikasi, stalemate.</li>
+              <li><b>Asimilasi:</b> Peleburan dua budaya sehingga budaya lama hilang menjadi budaya baru (contoh: amalgamasi/perkawinan campuran).</li>
+              <li><b>Akulturasi:</b> Pencampuran dua budaya tanpa menghilangkan unsur budaya asli.</li>
+            </ul>
+          </div>
+          <div class="mini-box pink">
+            <strong>Interaksi Sosial Disosiatif (Mengarah ke Pertentangan)</strong>
+            <ul class="styled-list">
+              <li><b>Persaingan (Competition):</b> Kompetisi sehat/sportif tanpa kekerasan.</li>
+              <li><b>Kontravensi:</b> Sikap menentang secara tersembunyi (penghasutan, fitnah, penolakan).</li>
+              <li><b>Pertentangan (Konflik):</b> Benturan disertai ancaman/kekerasan (contoh: tawuran).</li>
+            </ul>
+            <b>Urutan Keteraturan Sosial:</b> Tertib sosial → Order → Keajegan → Pola.
+          </div>
+        </div>
+      </div>
 
-      statusEl.className = "status-banner show warn";
-      statusEl.textContent = "Mengirim LKPD & data KKTP ke Google Sheets...";
+      <div class="card">
+        <h3>C. Sosialisasi & D. Lembaga Sosial</h3>
+        <p><b>Tahapan Sosialisasi (G.H. Mead):</b> Preparatory stage (persiapan) → Play stage (meniru) → Game stage (siap bertindak) → Generalized stage (penerimaan norma kolektif).<br>
+        <b>Agen Sosialisasi:</b> Keluarga (primer), Lembaga Pendidikan, Kelompok Permainan (peer group), Lingkungan Kerja, dan Media Massa.</p>
+        <div class="grid-3">
+          <div class="mini-box"><strong>1. Lembaga Keluarga</strong>Fungsi reproduksi, ekonomi, proteksi, sosialisasi, dan afeksi.</div>
+          <div class="mini-box"><strong>2. Lembaga Pendidikan</strong>Formal, nonformal, informal. Memiliki fungsi manifes (nyata) & fungsi laten (tersembunyi).</div>
+          <div class="mini-box"><strong>3. Lembaga Ekonomi</strong>Mengatur produksi, distribusi, konsumsi, pengupahan, dan jual beli.</div>
+          <div class="mini-box amber"><strong>4. Lembaga Agama</strong>Pedoman hidup, identitas keagamaan, kaidah tata kelakuan.</div>
+          <div class="mini-box amber"><strong>5. Lembaga Politik</strong>Melembagakan norma hukum (legislatif), menegakkan UU, menjaga keamanan negara.</div>
+        </div>
+      </div>
 
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            nama: state.name,
-            kelas: state.kelas,
-            materi: t.title,
-            tp: t.tps.join(" | "),
-            skorKuis: sc ? sc.text : "Belum dikerjakan",
-            judulLkpd: lkpd.title || "-",
-            analisisFenomena: lkpd.analysis || "-",
-            rencanaAksi: lkpd.action || "-",
-            refleksiMindful: lkpd.mindful || "-",
-            refleksiMeaningful: lkpd.meaningful || "-"
-          })
-        });
-        statusEl.className = "status-banner show ok";
-        statusEl.textContent = "✓ Berhasil dikirim! Data LKPD dan status KKTP sudah masuk ke Google Sheets.";
-      } catch (err) {
-        statusEl.className = "status-banner show warn";
-        statusEl.textContent = "Gagal mengirim data: " + err.message;
-      }
-    }
+      <div class="card">
+        <h3>E. Dinamika Sosial & Pemecahan Masalah Sosial</h3>
+        <p><b>Penyebab Dinamika Sosial:</b> Perubahan jumlah penduduk, penemuan baru, pertentangan dalam masyarakat, dan revolusi.</p>
+        <ul class="styled-list">
+          <li><b>Bentuk Kemiskinan:</b> Absolut, relatif, kultural, natural, dan struktural.</li>
+          <li><b>Dampak Masalah Sosial:</b> Ketidakadilan, kesenjangan sosial-ekonomi, meningkatnya angka putus sekolah, dan kriminalitas.</li>
+          <li><b>Solusi Pemerintah:</b> Program Keluarga Harapan (PKH), KIS, KIP, subsidi tepat sasaran, dan penguatan modal bergulir UMKM tanpa agunan.</li>
+        </ul>
+      </div>
+    `,
+    flashcards: [
+      { q: "Apa perbedaan Asimilasi dan Akulturasi?", a: "Asimilasi meleburkan dua budaya hingga budaya lama hilang menjadi budaya baru, sedangkan Akulturasi memadukan dua budaya tanpa menghilangkan ciri khas budaya lama." },
+      { q: "Apa perbedaan Arbitrase dan Mediasi dalam akomodasi?", a: "Arbitrase melibatkan pihak ketiga yang berwenang mengambil keputusan mengikat, sedangkan Mediasi melibatkan pihak ketiga yang netral hanya sebagai penasihat." },
+      { q: "Sebutkan urutan terbentuknya keteraturan sosial!", a: "Tertib sosial (social order) → Order → Keajegan → Pola." },
+      { q: "Sebutkan 5 fungsi utama lembaga keluarga!", a: "Fungsi reproduksi, fungsi ekonomi, fungsi proteksi (perlindungan), fungsi sosialisasi, dan fungsi afeksi (kasih sayang)." }
+    ],
+    quiz: [
+      { q: "Penyelesaian sengketa antara buruh dan perusahaan dengan menghadirkan pihak ketiga yang keputusannya wajib dipatuhi kedua pihak disebut...", opts: ["Mediasi", "Arbitrase", "Kompromi", "Toleransi"], ans: 1, exp: "Arbitrase adalah bentuk akomodasi dengan pihak ketiga yang memiliki wewenang memutuskan perkara." },
+      { q: "Tahap sosialisasi ketika anak mulai memahami peran orang lain dan aturan permainan yang berlaku luas di masyarakat adalah...", opts: ["Preparatory stage", "Play stage", "Game stage", "Generalized stage"], ans: 3, exp: "Generalized stage (penerimaan norma kolektif) adalah tahap kedewasaan memahami norma masyarakat luas." },
+      { q: "Tawuran antarpelajar merupakan contoh bentuk interaksi sosial...", opts: ["Kompetisi", "Kontravensi", "Konflik (pertentangan)", "Akomodasi"], ans: 2, exp: "Tawuran melibatkan benturan fisik dan kekerasan sehingga tergolong pertentangan/konflik." }
+    ]
+  },
+  {
+    id: 7,
+    bab: "BAB 7",
+    title: "Perilaku Ekonomi dan Kesejahteraan Sosial",
+    desc: "Kebutuhan & kelangkaan, motif & prinsip ekonomi, permintaan-penawaran & harga keseimbangan, pasar, inflasi, uang & lembaga keuangan, serta pengelolaan keuangan.",
+    materiHTML: `
+      <div class="card">
+        <h3>A. Kebutuhan & Kelangkaan, B. Prinsip Ekonomi, C-D. Pelaku Ekonomi</h3>
+        <ul class="styled-list">
+          <li><b>Klasifikasi Kebutuhan:</b> Intensitas (Primer, Sekunder, Tersier), Waktu (Sekarang, Akan datang), Sifat (Jasmani, Rohani), Subjek (Individu, Kelompok).</li>
+          <li><b>Alat Pemuas:</b> Hubungan dengan benda lain (Substitusi & Komplementer), Tujuan (Produksi & Konsumsi), Cara memperoleh (Benda ekonomi & Benda bebas).</li>
+          <li><b>Kelangkaan (Scarcity):</b> Terjadi akibat pertumbuhan penduduk, kerusakan SDA, keterbatasan teknologi/kemampuan produksi, dan <i>demonstration effect</i>.</li>
+          <li><b>Prinsip Ekonomi:</b> Dengan pengorbanan tertentu memperoleh hasil maksimal, atau dengan pengorbanan minimal memperoleh hasil tertentu.</li>
+          <li><b>Pelaku Ekonomi:</b> Rumah Tangga Keluarga (RTK), Rumah Tangga Produsen (RTP), dan Rumah Tangga Negara (Pemerintah).</li>
+        </ul>
+      </div>
 
-    function copyLkpdText() {
-      saveLkpd();
-      const t = getCurrentTopic();
-      const lkpd = state.lkpdByTopic[t.id] || {};
-      const sc = state.scoresByTopic[t.id];
-      const text = [
-        `Nama: ${state.name || "-"} | Kelas: ${state.kelas || "-"}`,
-        `Materi: ${t.title}`,
-        `Skor Kuis: ${sc ? sc.text + " (" + sc.kktp + ")" : "Belum dikerjakan"}`,
-        `Judul: ${lkpd.title || "-"}`,
-        `Analisis: ${lkpd.analysis || "-"}`,
-        `Rencana Aksi: ${lkpd.action || "-"}`,
-        `Refleksi Mindful: ${lkpd.mindful || "-"}`,
-        `Refleksi Meaningful & Joyful: ${lkpd.meaningful || "-"}`
-      ].join("\n");
+      <div class="card">
+        <h3>E. Permintaan, Penawaran, Harga Keseimbangan & Pasar</h3>
+        <div class="grid-2">
+          <div class="mini-box pink">
+            <strong>Hukum Permintaan (Demand)</strong>
+            <i>"Jika harga barang/jasa naik, jumlah permintaan akan turun (ceteris paribus)."</i><br>
+            Kurva berlereng negatif (menurun dari kiri atas ke kanan bawah). Dipengaruhi pendapatan, selera, harga barang substitusi/komplementer, dan ekspektasi masa depan.
+          </div>
+          <div class="mini-box green">
+            <strong>Hukum Penawaran (Supply)</strong>
+            <i>"Jika harga barang/jasa naik, jumlah penawaran akan meningkat."</i><br>
+            Kurva berlereng positif (naik dari kiri bawah ke kanan atas). Dipengaruhi biaya produksi, teknologi, jumlah produsen, pajak, dan subsidi.
+          </div>
+        </div>
 
-      navigator.clipboard.writeText(text).then(() => {
-        const el = document.getElementById("sheetStatus");
-        el.className = "status-banner show ok";
-        el.textContent = "✓ Ringkasan LKPD berhasil disalin.";
-      });
-    }
+        <div class="sim-panel">
+          <h4>📊 Simulasi Interaktif: Harga Keseimbangan Pasar (Pagar Besi Tempa)</h4>
+          <p style="font-size:13px;">Geser atau pilih tingkat harga (P) untuk melihat kondisi kelebihan penawaran, keseimbangan pasar, atau kelebihan permintaan (berdasarkan studi kasus buku):</p>
+          <div class="sim-controls">
+            <div class="control-group">
+              <label>Pilih Harga Penawaran (Rp)</label>
+              <select id="eco-price" onchange="calcMarket()">
+                <option value="500000">Rp 500.000,00</option>
+                <option value="475000">Rp 475.000,00</option>
+                <option value="450000" selected>Rp 450.000,00</option>
+                <option value="425000">Rp 425.000,00</option>
+                <option value="400000">Rp 400.000,00</option>
+              </select>
+            </div>
+          </div>
+          <div class="sim-result" id="eco-market-res">Permintaan (Qd) = <b>70 unit</b> | Penawaran (Qs) = <b>70 unit</b> → Status: <span style="color:#10b981;">TERCAPAI HARGA KESEIMBANGAN (EQUILIBRIUM)</span></div>
+        </div>
+      </div>
 
-    loadState();
-  </script>
+      <div class="card">
+        <h3>F. Inflasi, G-H. Lembaga Keuangan & Uang, I-K. Pengelolaan Keuangan & Kesejahteraan</h3>
+        <div class="grid-2">
+          <div class="mini-box amber">
+            <strong>Inflasi & Uang</strong>
+            <b>Inflasi:</b> Kenaikan harga barang/jasa secara umum dan terus-menerus (creeping, galloping, hyperinflation).<br>
+            <b>Fungsi Asli Uang:</b> Alat tukar, satuan hitung, dan penyimpan nilai.<br>
+            <b>Uang Elektronik:</b> Berbasis kartu (<i>e-money</i>) dan aplikasi (<i>e-wallet</i>).
+          </div>
+          <div class="mini-box">
+            <strong>Lembaga Keuangan & Pengelolaan Keuangan</strong>
+            <b>Bank:</b> Bank Sentral (BI), Bank Umum, BPR.<br>
+            <b>Nonbank:</b> Pasar modal, koperasi simpan pinjam, pegadaian, asuransi, dana pensiun, modal ventura, anjak piutang.<br>
+            <b>Pengelolaan Keuangan:</b> Perencanaan → Penyimpanan → Pengendalian → Penggunaan → Pemeriksaan → Evaluasi.
+          </div>
+        </div>
+        <p style="margin-top:12px;"><b>Upaya Pemerintah Mengatasi Kelangkaan & Meningkatkan Kesejahteraan:</b> Pemberian subsidi, penetapan harga eceran tertinggi (HET), kerja sama ekonomi antardaerah, serta penguatan BUMN (Persero & Perum), BUMS (PO, Firma, CV, PT), dan Koperasi.</p>
+      </div>
+    `,
+    flashcards: [
+      { q: "Bunyi Hukum Permintaan dan Hukum Penawaran!", a: "Hukum Permintaan: Harga naik → permintaan turun (berbanding terbalik). Hukum Penawaran: Harga naik → penawaran naik (berbanding lurus)." },
+      { q: "Apa yang dimaksud dengan Harga Keseimbangan (Equilibrium)?", a: "Harga yang terbentuk ketika jumlah barang yang diminta sama dengan jumlah barang yang ditawarkan (Qd = Qs)." },
+      { q: "Sebutkan 3 fungsi asli uang!", a: "1. Sebagai alat tukar, 2. Sebagai satuan hitung, 3. Sebagai alat penyimpan nilai." },
+      { q: "Apa perbedaan benda substitusi dan benda komplementer?", a: "Substitusi adalah benda pengganti (beras dengan jagung), sedangkan komplementer adalah benda pelengkap (kopi dengan gula)." }
+    ],
+    quiz: [
+      { q: "Berdasarkan data tabel pagar besi tempa, harga keseimbangan tercapai pada harga Rp 450.000 dengan kuantitas...", opts: ["50 unit", "60 unit", "70 unit", "90 unit"], ans: 2, exp: "Pada harga Rp 450.000, jumlah permintaan (70 unit) sama persis dengan jumlah penawaran (70 unit)." },
+      { q: "Kenaikan harga barang dan jasa secara umum dan berlangsung terus-menerus dalam jangka waktu lama disebut...", opts: ["Deflasi", "Inflasi", "Devaluasi", "Subsidi"], ans: 1, exp: "Inflasi adalah gejala kenaikan harga barang/jasa secara umum dan terus-menerus." },
+      { q: "Berikut ini yang termasuk lembaga keuangan nonbank adalah...", opts: ["Bank Perkreditan Rakyat (BPR)", "Bank Umum Devisa", "Perusahaan Pegadaian dan Asuransi", "Bank Sentral"], ans: 2, exp: "Pegadaian, asuransi, pasar modal, dan koperasi termasuk Lembaga Keuangan Bukan Bank (LKBB)." }
+    ]
+  }
+];
+
+let currentBab = 0;
+let currentMode = 'materi';
+let completedBabs = JSON.parse(localStorage.getItem('ipas_done') || '[]');
+let fcIndex = 0;
+let fcFlipped = false;
+
+function renderSidebar() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = MODULES.map((m, idx) => {
+    const isDone = completedBabs.includes(m.id);
+    const isActive = idx === currentBab;
+    return `
+      <button class="nav-item ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectBab(${idx})">
+        <span class="nav-num">${isDone ? '✓' : m.id}</span>
+        <span class="nav-title"><b>${m.bab}:</b> ${m.title}</span>
+      </button>
+    `;
+  }).join('');
+
+  const pct = Math.round((completedBabs.length / MODULES.length) * 100);
+  document.getElementById('prog-text').textContent = `${completedBabs.length}/${MODULES.length} Bab (${pct}%)`;
+  document.getElementById('prog-fill').style.width = `${pct}%`;
+
+  const btnDone = document.getElementById('btn-mark-done');
+  const curId = MODULES[currentBab].id;
+  if (completedBabs.includes(curId)) {
+    btnDone.textContent = '✓ Bab Telah Selesai (Klik untuk Batal)';
+    btnDone.style.background = '#475569';
+  } else {
+    btnDone.textContent = '✓ Tandai Bab Selesai';
+    btnDone.style.background = '#10b981';
+  }
+}
+
+function selectBab(idx) {
+  currentBab = idx;
+  fcIndex = 0;
+  fcFlipped = false;
+  document.getElementById('sidebar').classList.remove('open');
+  renderMain();
+  renderSidebar();
+}
+
+function setMode(mode, btn) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMain();
+}
+
+function renderMain() {
+  const mod = MODULES[currentBab];
+  document.getElementById('hero-bab').textContent = mod.bab;
+  document.getElementById('hero-title').textContent = mod.title;
+  document.getElementById('hero-desc').textContent = mod.desc;
+
+  const area = document.getElementById('content-area');
+  if (currentMode === 'materi') {
+    area.innerHTML = mod.materiHTML;
+  } else if (currentMode === 'flashcard') {
+    const fc = mod.flashcards[fcIndex];
+    area.innerHTML = `
+      <div class="card">
+        <h3>🗂️ Kartu Konsep Mandiri (${fcIndex + 1} dari ${mod.flashcards.length})</h3>
+        <p style="font-size:13px; color:var(--text-muted);">Klik kartu di bawah ini untuk membalik antara pertanyaan dan jawaban kunci.</p>
+        <div class="flashcard-container">
+          <div class="flashcard" onclick="flipCard()">
+            <span class="fc-tag">${fcFlipped ? 'JAWABAN / KONSEP KUNCI' : 'PERTANYAAN UJI INGATAN'}</span>
+            <div class="fc-content">${fcFlipped ? fc.a : fc.q}</div>
+            <span class="fc-hint">👆 Klik kartu untuk membalik</span>
+          </div>
+          <div class="fc-nav">
+            <button class="btn-action" onclick="prevCard()">← Sebelumnya</button>
+            <span style="font-weight:700;">${fcIndex + 1} / ${mod.flashcards.length}</span>
+            <button class="btn-action" onclick="nextCard()">Berikutnya →</button>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (currentMode === 'quiz') {
+    area.innerHTML = `
+      <div class="card">
+        <h3>✍️ Kuis Pemahaman Mandiri — ${mod.bab}</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Pilih jawaban yang paling tepat untuk melihat pembahasan langsung.</p>
+        ${mod.quiz.map((item, qIdx) => `
+          <div class="quiz-q">
+            <p>${qIdx + 1}. ${item.q}</p>
+            ${item.opts.map((opt, oIdx) => `
+              <button class="opt-btn" id="q-${qIdx}-o-${oIdx}" onclick="checkAnswer(${qIdx}, ${oIdx})">${String.fromCharCode(65+oIdx)}. ${opt}</button>
+            `).join('')}
+            <div class="feedback" id="fb-${qIdx}"></div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+}
+
+function flipCard() { fcFlipped = !fcFlipped; renderMain(); }
+function prevCard() {
+  const len = MODULES[currentBab].flashcards.length;
+  fcIndex = (fcIndex - 1 + len) % len;
+  fcFlipped = false;
+  renderMain();
+}
+function nextCard() {
+  const len = MODULES[currentBab].flashcards.length;
+  fcIndex = (fcIndex + 1) % len;
+  fcFlipped = false;
+  renderMain();
+}
+
+function checkAnswer(qIdx, oIdx) {
+  const item = MODULES[currentBab].quiz[qIdx];
+  const fb = document.getElementById(`fb-${qIdx}`);
+  item.opts.forEach((_, idx) => {
+    const btn = document.getElementById(`q-${qIdx}-o-${idx}`);
+    btn.disabled = true;
+    if (idx === item.ans) btn.classList.add('correct');
+    else if (idx === oIdx) btn.classList.add('wrong');
+  });
+  fb.style.display = 'block';
+  if (oIdx === item.ans) {
+    fb.style.background = '#dcfce7';
+    fb.style.color = '#065f46';
+    fb.innerHTML = `<b>Benar!</b> ${item.exp}`;
+  } else {
+    fb.style.background = '#fee2e2';
+    fb.style.color = '#991b1b';
+    fb.innerHTML = `<b>Kurang Tepat.</b> ${item.exp}`;
+  }
+}
+
+function toggleComplete() {
+  const id = MODULES[currentBab].id;
+  if (completedBabs.includes(id)) {
+    completedBabs = completedBabs.filter(x => x !== id);
+  } else {
+    completedBabs.push(id);
+  }
+  localStorage.setItem('ipas_done', JSON.stringify(completedBabs));
+  renderSidebar();
+}
+
+// Simulators
+function runEcoSim() {
+  const val = document.getElementById('sim-eco').value;
+  const map = {
+    lebah: "Interaksi: <b>Simbiosis Mutualisme</b> — Lebah mendapat nektar, bunga terbantu penyerbukannya.",
+    anggrek: "Interaksi: <b>Simbiosis Komensalisme</b> — Anggrek mendapat tempat menempel untuk cahaya, pohon mangga tidak dirugikan.",
+    benalu: "Interaksi: <b>Simbiosis Parasitisme</b> — Benalu menyerap sari makanan inang sehingga merugikan pohon inang.",
+    singa: "Interaksi: <b>Predasi</b> — Singa berperan sebagai predator (karnivor) dan rusa sebagai mangsa (herbivor).",
+    sapi: "Interaksi: <b>Kompetisi</b> — Persaingan dua spesies herbivor memperebutkan sumber makanan (rumput) yang sama."
+  };
+  document.getElementById('sim-eco-res').innerHTML = map[val];
+}
+
+function calcMikro() {
+  const su = parseFloat(document.getElementById('mikro-su').value) || 0;
+  const sn = parseInt(document.getElementById('mikro-sn').value) || 0;
+  const noniusVal = sn * 0.01;
+  const total = (su + noniusVal).toFixed(2);
+  document.getElementById('mikro-res').innerHTML = `Hasil Pengukuran: ${su} + ${noniusVal.toFixed(2)} = <b>(${total} ± 0.005) mm</b> (Ketelitian 0,01 mm)`;
+}
+
+function calcEnergy() {
+  const m = parseFloat(document.getElementById('en-m').value) || 0.2;
+  const h1 = parseFloat(document.getElementById('en-h1').value) || 0;
+  const h2 = parseFloat(document.getElementById('en-h2').value) || 0;
+  const g = 10;
+  const ep1 = m * g * h1;
+  const ep2 = m * g * h2;
+  const diffH = Math.max(0, h1 - h2);
+  const v2 = Math.sqrt(2 * g * diffH);
+  document.getElementById('en-res').innerHTML = `Dengan g = 10 m/s²: EP₁ = ${ep1.toFixed(2)} J, EP₂ = ${ep2.toFixed(2)} J → Kecepatan v₂ = <b>${v2.toFixed(2)} m/s</b>`;
+}
+
+function calcMarket() {
+  const p = document.getElementById('eco-price').value;
+  const data = {
+    "500000": { qd: 50, qs: 90, status: '<span style="color:#d97706;">KELEBIHAN PENAWARAN (Surplus) 40 unit</span>' },
+    "475000": { qd: 60, qs: 80, status: '<span style="color:#d97706;">KELEBIHAN PENAWARAN (Surplus) 20 unit</span>' },
+    "450000": { qd: 70, qs: 70, status: '<span style="color:#10b981;">TERCAPAI HARGA KESEIMBANGAN (EQUILIBRIUM)</span>' },
+    "425000": { qd: 80, qs: 60, status: '<span style="color:#e11d48;">KELEBIHAN PERMINTAAN (Shortage) 20 unit</span>' },
+    "400000": { qd: 90, qs: 50, status: '<span style="color:#e11d48;">KELEBIHAN PERMINTAAN (Shortage) 40 unit</span>' }
+  }[p];
+  document.getElementById('eco-market-res').innerHTML = `Permintaan (Qd) = <b>${data.qd} unit</b> | Penawaran (Qs) = <b>${data.qs} unit</b> → Status: ${data.status}`;
+}
+
+renderSidebar();
+renderMain();
+</script>
 </body>
 </html>
